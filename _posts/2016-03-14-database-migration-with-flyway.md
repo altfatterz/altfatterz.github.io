@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Database migration with Flyway
-tags: [flyway, postgresql, springboot, docker]
+tags: [flywaydb, postgresql, springboot, docker]
 ---
 
 In this post I describe how to evolve a database schema using [Flyway](https://flywaydb.org/). I will create a simple service which manages athletes using postgresql as datastore.

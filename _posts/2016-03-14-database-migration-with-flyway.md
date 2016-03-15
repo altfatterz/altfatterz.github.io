@@ -74,15 +74,11 @@ flyway.enabled=true
 flyway.baseline-on-migrate=true
 ```  
   
-The database schema changes are encapsulated in the `db/migration` folder 
+The database schema changes are in form of sql files in the `db/migration` folder 
   
-V2__Add_country_field_to_athletes_table.sql:
-
 ```sql
 ALTER TABLE athletes ADD COLUMN country VARCHAR(200);
 ```
-
-V3__Create_index_first_name_in_athletes_table.sql:
 
 ```sql
 CREATE INDEX first_name_idx ON athletes (first_name);

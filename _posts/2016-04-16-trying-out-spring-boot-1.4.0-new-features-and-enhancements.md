@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Trying out Spring Boot 1.4.0-M2 new features and enhancements
+title: Trying out Spring Boot 1.4.0 new features and enhancements
 tags: [springboot]
 ---
 

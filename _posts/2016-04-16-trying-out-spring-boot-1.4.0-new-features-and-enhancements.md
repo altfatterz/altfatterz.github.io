@@ -72,7 +72,7 @@ public class ApplicationTests {
 
 	@Test
 	public void random() {
-		ResponseEntity<String> fact = template.getForEntity("/", String.class); // cannot use ChuckNorrisFact deserialization
+		ResponseEntity<String> fact = template.getForEntity("/", String.class);
 
 		assertThat(fact.getBody(), containsString("Chuck Norris sleeps with a pillow under his gun."));
 	}
@@ -91,7 +91,7 @@ Sometimes you would like to test a simple "slice" of the application instead of 
 
 #### @WebMvcTest
 
-In order to test only the controller layer or often a single controller the `@WebMvcTest` used in combination with @MockBean can be handy. @Service or @Repository components will not be scanned.
+In order to test only the controller layer or often a single controller the `@WebMvcTest` used in combination with `@MockBean` can be handy. `@Service` or `@Repository` components will not be scanned.
 
 ```java
 @RunWith(SpringRunner.class)
@@ -117,7 +117,7 @@ public class CheckNorrisFactControllerTests {
 
 #### @JsonTest
 
-To test JSON marshalling and unmarshalling you can use the `@JsonTest` annotation. `@JsonTest` will auto-configure Jackson ObjectMappers, @JsonComponent beans (see later).
+To test JSON marshalling and unmarshalling you can use the `@JsonTest` annotation. `@JsonTest` will auto-configure Jackson ObjectMappers and `@JsonComponent` beans (see later).
 
 ```java
 @RunWith(SpringRunner.class)
@@ -145,7 +145,7 @@ public class ChuckNorrisFactJsonTests {
 
 #### @DataJpaTest
 
-To test the JPA layer of an application you can use @DataJpaTest. By default it configures an in-memory database, scans for @Entity classes and configures the Spring Data JPA repositories. @Service, @Controller, @RestController beans will not be loaded.
+To test the JPA layer of an application you can use @DataJpaTest. By default it configures an in-memory database, scans for `@Entity` classes and configures the Spring Data JPA repositories. `@Service`, `@Controller`, `@RestController` beans will not be loaded.
 
 ```java
 @RunWith(SpringRunner.class)

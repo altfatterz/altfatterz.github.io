@@ -4,7 +4,7 @@ title: Trying out Spring Boot 1.4.0 new features and enhancements
 tags: [springboot]
 ---
 
-Spring Boot 1.4 M2 upgrades to Spring 4.3.0-RC1 and defaults to Hibernate 5.1
+In this post I am looking into Spring Boot 1.4.0-M2 version trying out the new features and enhancements. Spring Boot 1.4.0-M2 upgrades to Spring 4.3.0-RC1 and Hibernate 5.1.
 
 # Spring 4.3.0-RC1
 

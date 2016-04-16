@@ -59,6 +59,12 @@ AMI created in 01:00.529s in eu-central-1 -> ami-dc09efb3
 
 Boxfuse automatically provisioned a PostgreSQL database on AWS RDS.
 
+```
+$ boxfuse run chucknorrisfacts:1.0 -env=test -ports.http=80
+```
+
+
+
 
 Connecting to the provisioned PostgreSQL RDS service:
 ```
@@ -75,3 +81,6 @@ It also deregisters the used AWS AMI image.
 
 Issue with creating the load balancer with different port:
 https://github.com/boxfuse/boxfuse-issues/issues/65
+
+```
+```

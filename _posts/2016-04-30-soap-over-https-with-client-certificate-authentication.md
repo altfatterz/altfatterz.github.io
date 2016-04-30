@@ -5,7 +5,7 @@ tags: [wsdl, springboot, WebService, soapui]
 ---
 
 Recently I had to consume a SOAP web service over HTTPS using client certificate authentication. I thought I will write a blog post about it describing my findings.
-For the example I will build a simple service which exposes team information about the [UEFA EURO 2016](http://www.uefa.com/uefaeuro/season=2016/teams/index.html) football championship. The service will be secured with client certificate authentication an accessible only over HTTPS.
+For the example I will build a simple service which exposes team information about the [UEFA EURO 2016](http://www.uefa.com/uefaeuro/season=2016/teams/index.html) football championship. The service will be secured with client certificate authentication and accessible only over HTTPS.
 
 ### Producer
 

@@ -231,6 +231,8 @@ keytool -import -alias javaclient -file javaclient.crt -keystore truststore.jks 
 The `truststore` should have both `soapui` and `javaclient` certificates:
 
 ```
+keytool -list -keystore truststore.jks -storepass password
+
 Keystore type: JKS
 Keystore provider: SUN
 

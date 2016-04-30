@@ -387,5 +387,5 @@ public class WebServiceClientConfig {
 
 ### Summary
 
-In this post we saw how can we expose a simple SOAP web service over HTTPS and have two clients (soapUI, java client) connect to it using client certificates. If you would like to try out this have a look at this github repository.
+In this post we saw how can we expose a simple SOAP web service over HTTPS and have two clients (soapUI, java client) connect to it using client certificates. If you would like to try out this have a look at this [https://github.com/altfatterz/spring-ws-with-keystore](https://github.com/altfatterz/spring-ws-with-keystore) repository.
 

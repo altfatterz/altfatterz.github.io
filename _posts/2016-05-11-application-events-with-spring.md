@@ -123,7 +123,7 @@ public void handleHighBids(BidCreatedEvent bidCreatedEvent) {
 
 Note that starting from Spring 4.3.0.RC1 we are able to specify the condition to refer to beans (e.g. @beanName.method()).
 
-### Transaction bound event
+### Transaction bound events
 
 With synchronous event handling the listener can be bound to a phase of the transaction in which the publisher is running. The following example shows that the listener should only handle the `TaskScheduledEvent` once the transaction in which it was published committed successfully.
 

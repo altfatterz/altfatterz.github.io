@@ -97,7 +97,6 @@ class EntityCreatedEvent<T> implements ResolvableTypeProvider {
 By default event listeners receive events synchronously, meaning that the publishing thread will block until all listeners have finished processing the event. The advantage of this is that if the publisher is running in a transactional context, the listener will receive the event within the same transactional context.
 However if processing events takes long time and scaling is important we can tell Spring to handle events asynchronously. In order to do this we need to redefine the `ApplicationEventMulticaster` bean with id `applicationEventMulticaster` configuring it with an asynchronous `TaskExecutor`.
 
-
 ```java
 @Bean
 ApplicationEventMulticaster applicationEventMulticaster() {
@@ -109,6 +108,16 @@ ApplicationEventMulticaster applicationEventMulticaster() {
 ```
 
 Note that this change will be global to the `ApplicationContext` meaning that all methods annotated with `@EventListener` will be executed asynchronously. If we like to have some events delivered synchronously others asynchronously within the same `ApplicationContext` check out [this](https://www.keyup.eu/en/blog/101-synchronous-and-asynchronous-spring-events-in-one-application) blog post which details how it can be done with a custom annotation and a custom `ApplicationEventMulticaster` wrapping a synchronous and asynchronous `ApplicationEventMulticaster` instance.
+
+> A much easier way to handle some events asynchronously is to use the `@Async` annotation.
+
+```java
+@Async
+@EventListener
+void handleAsync(MedicalRecordUpdatedEvent event) {
+    // MedicalRecordUpdatedEvent is processed in a separate thread.
+}
+```
 
 ### Filtering
 

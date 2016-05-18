@@ -92,6 +92,20 @@ class EntityCreatedEvent<T> implements ResolvableTypeProvider {
 }
 ```
 
+### Listen and publish
+
+You can publish an event as a result of handling another event by returning an instance of the new event or a collection of the new events in case you want to publish multiple events.
+
+```java
+@EventListener
+TaskModifiedEvent handleAssignedEvent1(TaskAssignedEvent event) {
+    // handle TaskAssignedEvent
+    return new TaskModifiedEvent();
+}
+```
+
+Note, this functionality does not work for async events. In that case you can manually inject `ApplicationEventPublisher` in the listener and publish the events through this.
+
 ### Async events
 
 By default event listeners receive events synchronously, meaning that the publishing thread will block until all listeners have finished processing the event. The advantage of this is that if the publisher is running in a transactional context, the listener will receive the event within the same transactional context.

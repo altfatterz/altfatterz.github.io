@@ -150,7 +150,7 @@ And indeed all the services see the updated value of the `message` property. You
 Going further, wouldn't it be nice if we do not need to call the `/monitor` endpoint at all when external configuration is changed? *Spring Cloud Config* provides support for this using the default git storage backend.
 Many git repository providers can notify you of changes in the repository through a webhook. Since the external repository is hosted on my github account, let's configure a webhook with GitHub. For this we need that our `config-sevice` is accessible on the internet.
 We use `ngrok` for this, which a very cool lightweight tool that creates a secure tunnel on your local machine together with a public URL. When `ngrok` is running, it listens on the same port your `config-service` is running (port 8888 in this case) and proxies external requests to your local machine.
-Download ngrok from here, unzip it to your `Applications` folder and create a symlink to it, this will allow you to run the ngrok command from any directory while in the terminal.
+Download ngrok from [here](https://ngrok.com/), unzip it to your `Applications` folder and create a symlink to it, this will allow you to run the ngrok command from any directory while in the terminal.
 
 ```sh
 $ cd /usr/local/bin

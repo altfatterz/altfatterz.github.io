@@ -1,12 +1,12 @@
 ---
 layout: post
 title: Centralized configuration with Spring Cloud Config
-tags: [spring]
+tags: [springcloudoss]
 ---
 
-In this blog post I am looking into [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/) project which is a great tool for centralized configuration management in a microservice environment. I have prepared a simple example project which you can find on my [github](git clone https://github.com/altfatterz/spring-cloud-config-example) account. It contains a `config-service` leveraging *Spring Cloud Config Server* and three little services using *Spring Cloud Config Client*.
+In this blog post I am looking into [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/) project which is a great tool for centralized configuration management in a microservice environment. I have prepared a simple example project which you can find on my [github](https://github.com/altfatterz/spring-cloud-config-example) account. It contains a `config-service` leveraging *Spring Cloud Config Server* and three little services using *Spring Cloud Config Client*.
 
-Clone the configuration and example repositories and build the project into your home directory.
+Clone the configuration and example repositories into your home directory and build the project.
 
 ```sh
 $ git clone https://github.com/altfatterz/spring-cloud-config-example-repo
@@ -137,49 +137,54 @@ And after that issue the following request:
 $ curl http://config:verysecure@localhost:8888/monitor -d path="*"
 ```
 
-You will see in the logs the of the services:
+You will see in the logs of the services:
 
 ```sh
 o.s.cloud.bus.event.RefreshListener      : Received remote refresh request. Keys refreshed [message]
 ```
 
-And indeed all the services see the updated value of the `message` property. You can easily verify by requesting the `/message` endpoint:
-
-```java
-@RestController
-@RefreshScope
-class MyRestController {
-
-	@Value("${message}")
-	private String message;
-
-	@RequestMapping("/message")
-	String message() {
-		return message;
-	}
-
-}
-```
+And indeed all the services see the updated value of the `message` property. You can also easily verify it by requesting the custom `/message` endpoint.
 
 ### Push notification
 
-Going further, wouldn't it be nice if we do not need to call the `/monitor` endpoint at all when external configuration is changed?
+Going further, wouldn't it be nice if we do not need to call the `/monitor` endpoint at all when external configuration is changed? *Spring Cloud Config* provides support for this using the default git storage backend.
+Many git repository providers can notify you of changes in the repository through a webhook. Since the external repository is hosted on my github account, let's configure a webhook with GitHub. For this we need that our `config-sevice` is accessible on the internet.
+We use `ngrok` for this, which a very cool lightweight tool that creates a secure tunnel on your local machine together with a public URL. When `ngrok` is running, it listens on the same port your `config-service` is running (port 8888 in this case) and proxies external requests to your local machine.
+Download ngrok from here, unzip it to your `Applications` folder and create a symlink to it, this will allow you to run the ngrok command from any directory while in the terminal.
 
+```sh
+$ cd /usr/local/bin
+$ ln -s /Applications/ngrok ngrok
+```
+
+Then start ngrok like this
 
 ```
 $ ngrok http 8888
 ```
 
-```
-$ rabbitmq-server
+It will create a public URL which we can use to setup our webhook in Github like this:
+
+![DockerHub](/images/github-webhook.png)
+
+We need to an activate the webhook functionality by setting the `spring.cloud.config.server.monitor.github.enabled` to `true`, and the `spring.cloud.config.server.git.uri` to the github url and restart the `config-service`
+
+```sh
+java -Dsecurity.user.name=config \
+     -Dsecurity.user.password=verysecure \
+     -Dspring.cloud.config.server.monitor.github.enabled=true \
+     -Dspring.cloud.config.server.git.uri=https://github.com/altfatterz/spring-cloud-config-example-repo \
+     -Dencrypt.key=foobarbaz \
+     -jar config-service/target/config-service-0.0.1-SNAPSHOT.jar
 ```
 
-```
-$ git clone https://github.com/altfatterz/spring-cloud-config-example
-$ cd spring-cloud-config-example
-$ mvn clean install
-$ java -jar /config-service
-$ java -jar
-```
+And again let's change the `message` property in the `application.properties` in your local `spring-cloud-config-example-repo` commit the changes and push it up to the origin. Soon you will notice in the logs that the `config-service` receives the Github push event and sends `RefreshRemoteApplicationEvent`s (delivered through Spring Cloud Bus with RabbitMQ transport) targeted at the applications it thinks might have changed (in this case to all targeted applications)
+As an exercise you can try if you just change a property in the `foo-service.properties` file then the config-service will send refresh event just to the `foo-service`.
+
+## Summary
+
+Congratulations! You just setup centralized configuration management in a distributed system with automatic re-initialization using push notification, how cool is that? :)
+
+
 
 

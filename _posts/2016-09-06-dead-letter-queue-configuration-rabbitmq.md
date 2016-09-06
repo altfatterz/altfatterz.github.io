@@ -4,7 +4,7 @@ title: Dead letter queue configuration with RabbitMQ
 tags: [RabbitMQ, amqp, springboot]
 ---
 
-In this post I am looking into dead letter queue configuration with RabbitMQ. A message from a queue can be 'dead-lettered' when one the following things occur:
+In this blog post I am looking into dead letter queue configuration with RabbitMQ. A message from a queue can be 'dead-lettered' when one the following things occur:
 
   * the message is rejected and requeuing is set to false
   * TTL for the message expires
@@ -215,4 +215,4 @@ The following image shows an example of a `PaymentOrder` message which was rejec
 
 ### Conclusion
 
-As you could see the dead letter queue configuration is pretty simple using RabbitMQ. The example used in this blog post is available on my GitHub account.
+As you could see the dead letter queue configuration is pretty simple using RabbitMQ. The example used in this blog post is available on [my GitHub account](https://github.com/altfatterz/rabbit-dead-letter-queue).

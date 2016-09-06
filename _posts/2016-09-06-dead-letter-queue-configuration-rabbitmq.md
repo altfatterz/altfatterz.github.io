@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dead letter queue configuration with RabbitMQ
-tags: [RabbitMQ, springboot]
+tags: [RabbitMQ, amqp, springboot]
 ---
 
 In this post I am looking into dead letter queue configuration with RabbitMQ. A message from a queue can be 'dead-lettered' when one the following things occur:

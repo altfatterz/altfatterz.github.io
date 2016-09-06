@@ -4,12 +4,13 @@ title: Dead letter queue configuration with RabbitMQ
 tags: [RabbitMQ, springboot]
 ---
 
-In this post I am looking into dead letter queue configuration with RabbitMQ. A message from a queue can be 'dead-lettered' when one the following things occur:
+In this post we play with dead letter queue configuration with RabbitMQ. A message from a queue can be 'dead-lettered' when one the following things occur:
 
-    * the message is rejected and requeuing is set to false
-    * TTL for the message expires
-    * the queue length limit is exceeded
+  * the message is rejected and requeuing is set to false
+  * TTL for the message expires
+  * the queue length limit is exceeded
 
+For working example
 Let's choose the first case with a working example. In a producer app we are going to use `PaymentOrders` as messages which are going to be processed by a consumer.
 The `PaymentOrder` message will be rejected when there are insufficient funds on the payer's account.
 
@@ -17,19 +18,20 @@ The `PaymentOrder` message will be rejected when there are insufficient funds on
 
 The producer is a Spring Boot application which uses the [Spring AMQP](https://projects.spring.io/spring-amqp/) project to send `PaymentOrder` messages to RabbitMQ.
 
-### The producer API
+### The producer's API
 
-The first part of the producer's API is to define the exchange name where the messages are going to be sent.
+The first part of the producer's API is to define the names of the exchange, routing key, incoming and dead letter queue names.
 
 ```java
 public class Constants {
     public static final String EXCHANGE_NAME = "payment-orders.exchange";
+    public static final String ROUTING_KEY_NAME = "payment-orders";
     public static final String INCOMING_QUEUE_NAME = "payment-orders.incoming.queue";
     public static final String DEAD_LETTER_QUEUE_NAME = "payment-orders.dead-letter.queue";
 }
 ```
 
-The second part is to define the message format. We are using JSON in the example. The following example shows an example `PaymentOrder` sent to RabbitMQ.
+The second part is to define the message format. We are using JSON in this example. The following json format shows an how we model the `PaymentOrder` which we send to RabbitMQ.
 
 ```json
 {
@@ -39,7 +41,17 @@ The second part is to define the message format. We are using JSON in the exampl
 }
 ```
 
+Note that it is good practice not to use custom serialization format like Java serialization of the payload since that means you need have a java based consumer on the other side.
+Good practice is to format the payload in JSON. Every platform and/or language can parse JSON.
+
 ### The producer configuration
+
+We need to configure the AMQP infrastructure by declaring the exchange, queue, binding. The dead letter queue configuration is encapsulated in the incoming queue declaration.
+
+There is a concept of `dead letter exchange` (DLX) which is a normal exchange can be any type of `direct`, `topic` or `fanout` exchange. When failure occurs during processing a message fetched from queue, RabbitMQ checks if there is a dead letter exchange configured for that queue.
+If there is one configured via `x-dead-letter-exchange` argument then it routes the failed messages to it with the original routing key. This routing key can be overridden via the `x-dead-letter-routing-key` argument.
+
+In this example we are using the `default exchange` (no-name) as the `dead letter exchange` and using the dead letter queue name as the new routing key. There is no need to define any binding for the dead letter queue since every queue is bound to the default exchange by default.
 
 ```java
 @Configuration
@@ -83,7 +95,11 @@ public class AmqpConfig {
 }
 ```
 
+We need to redeclare the `RabbitTemplate` since we want to set a JSON message converter.
+
 ### The producer logic
+
+In this simple example we just generate random payment orders every 1 second which we send to RabbitMQ for further processing.
 
 ```java
 @Component
@@ -108,6 +124,8 @@ public class Producer {
 }
 
 ```
+
+<p><img src="/images/rabbitmq-dead-letter-queue.png" alt="RabbitMQ dead letter queue" /></p>
 
 ## The consumer
 
@@ -140,14 +158,11 @@ public class PaymentOrder {
 
 ### The consumer configuration
 
+The consumer only cares about the queue from where the messages are fetched. The incoming queue must exist otherwise the application will not start. Note that the dead letter queue does not have to exist in order for the consumer to start, but it should exist by the time messages need to be dead-lettered. If it is missing then, the messages will be silently dropped.
+
 ```java
 @Configuration
 public class AmqpConfig {
-
-    @Bean
-    DirectExchange exchange() {
-        return new DirectExchange(Constants.EXCHANGE_NAME);
-    }
 
     @Bean
     Queue incomingQueue() {
@@ -155,16 +170,6 @@ public class AmqpConfig {
                 .withArgument("x-dead-letter-exchange", "")
                 .withArgument("x-dead-letter-routing-key", Constants.DEAD_LETTER_QUEUE_NAME)
                 .build();
-    }
-
-    @Bean
-    Binding binding() {
-        return BindingBuilder.bind(incomingQueue()).to(exchange()).with(Constants.ROUTING_KEY_NAME);
-    }
-
-    @Bean
-    Queue deadLetterQueue() {
-        return QueueBuilder.durable(Constants.DEAD_LETTER_QUEUE_NAME).build();
     }
 
     @Bean
@@ -184,24 +189,24 @@ public class AmqpConfig {
 
 ### The consumer logic
 
+Whenever a message is available on the incoming queue our `process` method will be invoked with the deserialized `PaymentOrder` instance. Here we simulate the message rejection by throwing an `InsufficientFundsException` randomly.
 
 ```java
 @Component
 public class Consumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
-
     @RabbitListener(queues = Constants.INCOMING_QUEUE_NAME)
     public void process(@Payload PaymentOrder paymentOrder) throws InsufficientFundsException {
-        logger.info("Processing payload \'{}\'", paymentOrder);
-
         if (new Random().nextBoolean()) {
             throw new InsufficientFundsException("insufficient funds on account " + paymentOrder.getFrom());
         }
     }
+
 }
 ```
 
+The following shows an example `PaymentOrder` message from the dead letter queue:
+
 <p><img src="/images/rabbitmq-dead-letter-queue-message.png" alt="RabbitMQ dead letter queue message" /></p>
 
-<p><img src="/images/rabbitmq-dead-letter-queue.png" alt="RabbitMQ dead letter queue" /></p>
+

@@ -69,7 +69,7 @@ spring.datasource.initialize=false
 
 flyway.enabled=true
 
-# Controls weather to a automatically call baseline when migrate is executed against a non-empty schema with no metadata table.
+# Controls whether to a automatically call baseline when migrate is executed against a non-empty schema with no metadata table.
 # Only migrations above the baseLineVersion (default 1) will be applied
 flyway.baseline-on-migrate=true
 ```  

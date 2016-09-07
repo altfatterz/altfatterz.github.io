@@ -340,7 +340,7 @@ public class WebServiceClientConfig {
     }
 
     @Bean
-    public TeamClient weatherClient(Jaxb2Marshaller marshaller) throws Exception {
+    public TeamClient teamClient(Jaxb2Marshaller marshaller) throws Exception {
         TeamClient client = new TeamClient();
         client.setDefaultUri(this.url);
         client.setMarshaller(marshaller);

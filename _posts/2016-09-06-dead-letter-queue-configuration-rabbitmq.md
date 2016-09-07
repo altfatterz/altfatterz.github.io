@@ -93,7 +93,7 @@ In the RabbitMQ management console the `DLX` and `DLK` labels indicate that the 
 
 ### The producer logic
 
-The producer generates random `PaymentOrder` messages every second which are sent to RabbitMQ for further processing. Spring’s `AmqpTemplate` is auto-configured and it can be wired into our component. Since the message format is JSON the `Jackson2JsonMessageConverter` is defined which will be associated automatically to the auto-configured `AmqpTemplate`.
+The producer generates random `PaymentOrder` messages every 5 second which are sent to RabbitMQ for further processing. Spring’s `AmqpTemplate` is auto-configured and it can be wired into our component. Since the message format is JSON the `Jackson2JsonMessageConverter` is defined which will be associated automatically to the auto-configured `AmqpTemplate`.
 
 ```java
 @Component
@@ -212,6 +212,30 @@ public class Consumer {
 The following image shows an example of a `PaymentOrder` message which was rejected and as a result ended up in the `dead letter queue`
 
 <p><img src="/images/rabbitmq-dead-letter-queue-message.png" alt="RabbitMQ dead letter queue message" /></p>
+
+Sometimes it helps to automatically retry a failed operation in case it might succeed on a subsequent attempt. The Spring AMQP library provides support for this with the help of `RetryTemplate` which is part of the [Spring Retry](https://github.com/spring-projects/spring-retry) project (was pulled out from Spring Batch).
+Spring Boot makes it super easy to configure the `RetryTemplate` as shown the the following example.
+
+```yml
+spring:
+  rabbitmq:
+    listener:
+      retry:
+        enabled: true
+        initial-interval: 2000
+        max-attempts: 2
+        multiplier: 1.5
+        max-interval: 5000
+```
+
+With the above configuration the retry functionality is enabled (disabled by default), there should be maximum 2 attempts to deliver the message, between the first and the second attempt should be 2 seconds, later with a multiplier of 1.5 to the previous retry interval and up to 5 seconds.
+Running the consumer you will see in the logs
+
+```
+2016-09-07 21:56:53.396  INFO 11995 --- [cTaskExecutor-1] com.example.consumer.Consumer            : Processing at 'Wed Sep 07 21:56:53 CEST 2016' payload 'PaymentOrder{from='RS32 5346 0536 6006 4886 88', to='FI61 8364 3364 9834 16', amount=45.57}'
+2016-09-07 21:56:55.399  INFO 11995 --- [cTaskExecutor-1] com.example.consumer.Consumer            : Processing at 'Wed Sep 07 21:56:55 CEST 2016' payload 'PaymentOrder{from='RS32 5346 0536 6006 4886 88', to='FI61 8364 3364 9834 16', amount=45.57}'
+2016-09-07 21:56:55.401  WARN 11995 --- [cTaskExecutor-1] o.s.a.r.r.RejectAndDontRequeueRecoverer  : Retries exhausted for message (Body:'{"from":"RS32 5346 0536 6006 4886 88","to":"FI61 8364 3364 9834 16","amount":45.57}' MessageProperties [headers={__TypeId__=com.example.producer.api.PaymentOrder}, timestamp=null, messageId=null, userId=null, receivedUserId=null, appId=null, clusterId=null, type=null, correlationId=null, correlationIdString=null, replyTo=null, contentType=application/json, contentEncoding=UTF-8, contentLength=0, deliveryMode=null, receivedDeliveryMode=PERSISTENT, expiration=null, priority=0, redelivered=false, receivedExchange=payment-orders.exchange, receivedRoutingKey=payment-orders, receivedDelay=null, deliveryTag=31, messageCount=0, consumerTag=amq.ctag-vd18OXS9PSOeJmBQLY4o-w, consumerQueue=payment-orders.incoming.queue])
+```
 
 ### Conclusion
 

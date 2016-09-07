@@ -40,13 +40,13 @@ The second part is to define the message format. We are using JSON in this examp
 }
 ```
 
-Note that it is good practice not to use custom serialization format like Java serialization of the payload since that means you need have a java based consumer. Good practice is to format the payload in JSON. Every platform and/or language can parse JSON.
+Note that it is good practice not to use custom serialization format like Java serialization of the payload since that means you need to have a java based consumer. Good practice is to format the payload in JSON. Every platform and/or language can parse JSON.
 
 ### The producer configuration
 
 We need to configure the AMQP infrastructure. The dead letter queue configuration is encapsulated in the incoming queue declaration.
 
-There is a concept of [dead letter exchange](https://www.rabbitmq.com/dlx.html) (DLX) which is a normal exchange of type `direct`, `topic` or `fanout`. When failure occurs during processing a message fetched from queue, RabbitMQ checks if there is a dead letter exchange configured for that queue. If there is one configured via `x-dead-letter-exchange` argument then it routes the failed messages to it with the original routing key. This routing key can be overridden via the `x-dead-letter-routing-key` argument.
+There is a concept of [dead letter exchange](https://www.rabbitmq.com/dlx.html) (DLX) which is a normal exchange of type `direct`, `topic` or `fanout`. When failure occurs during processing a message fetched from a queue, RabbitMQ checks if there is a dead letter exchange configured for that queue. If there is one configured via `x-dead-letter-exchange` argument then it routes the failed messages to it with the original routing key. This routing key can be overridden via the `x-dead-letter-routing-key` argument.
 
 In this example we are using the `default exchange` (no-name) as the `dead letter exchange` and using the dead letter queue name as the new routing key. This will work since any queue is bound to the default exchange with the binding key equal to the queue name.
 
@@ -189,7 +189,7 @@ spring:
       default-requeue-rejected: false
 ```
 
-The problem with the above setting is that you cannot do that for some error scenario to requeue the message but for other error scenario to 'dead-letter' the message. In this case is better to leave the requeuing enabled and leverage the `AmqpRejectAndDontRequeueException` which will send the `basic.reject` with requeue=false.
+However if you would like to enable requeuing in some error scenarios is better to leave the requeuing enabled and leverage the `AmqpRejectAndDontRequeueException` which will send the `basic.reject` with requeue=false.
 
 ### The consumer logic
 

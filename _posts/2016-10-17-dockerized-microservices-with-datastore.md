@@ -5,7 +5,7 @@ tags: [docker, mysql, springboot]
 ---
 
 I have created a sample [repository](https://github.com/altfatterz/dockerized-microservices) where I experiment how to setup dockerized microservices with different datastores.
-In this blog post I will go through the `mysql-sample`. 
+In this blog post I will go through the sample using `mysql` datastore.
 
 Below you can find the `Dockerfile` for the `mysql-datastore` image. Leveraging the official `mysql` image from `Docker Hub` and using couple of environment variables the mysql container is configured. `MYSQL_RANDOM_ROOT_PASSWORD` environment variable set to `yes` makes sure that a random password for the root user will be generated and printed to the standard output in the container.
 The user identified with `MYSQL_USER` will be granted superuser permissions for the database specified by the `MYSQL_PASSWORD`.
@@ -141,6 +141,37 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/db?autoReconnect=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: demo
       SPRING_DATASOURCE_PASSWORD: demo
+```
+After running `docker-compose up` you can see the followings
+ 
+```bash
+Creating mysql-datastore
+Creating service-using-mysql-datastore
+Attaching to mysql-datastore, service-using-mysql-datastore
+mysql-datastore | Initializing database
+mysql-datastore | 2016-10-17T20:07:14.424157Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+service-using-mysql-datastore | wait-for-it.sh: waiting 15 seconds for mysql:3306
+...
+mysql-datastore | Database initialized
+mysql-datastore | MySQL init process in progress...
+...
+mysql-datastore | GENERATED ROOT PASSWORD: eeng4eeth3ahween2soh9raixaC1Eir0
+...
+mysql-datastore | MySQL init process done. Ready for start up.
+...
+mysql-datastore | Version: '5.7.15'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server (GPL)
+service-using-mysql-datastore | wait-for-it.sh: mysql:3306 is available after 14 seconds
+service-using-mysql-datastore |
+service-using-mysql-datastore |   .   ____          _            __ _ _
+service-using-mysql-datastore |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+service-using-mysql-datastore | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+service-using-mysql-datastore |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+service-using-mysql-datastore |   '  |____| .__|_| |_|_| |_\__, | / / / /
+service-using-mysql-datastore |  =========|_|==============|___/=/_/_/_/
+service-using-mysql-datastore |  :: Spring Boot ::        (v1.4.1.RELEASE)
+service-using-mysql-datastore |
+service-using-mysql-datastore | 2016-10-17 20:07:30.831  INFO 43 --- [           main] com.example.DemoApplication              : Starting DemoApplication v0.0.1-SNAPSHOT on a1e7526b0a91 with PID 43 (/app.jar started by root in /)
+
 ```
 
 There are other samples using Riak and MongoDB in this [repository](https://github.com/altfatterz/dockerized-microservices) and I am planning to add more in the future.     

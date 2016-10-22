@@ -66,3 +66,7 @@ In the logs you will see the following:
 INFO o.s.b.f.s.DefaultListableBeanFactory - Overriding bean definition for bean 'greetingService' with a different definition: replacing [Generic bean: class [com.example.service.DutchGreetingService]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/spring/module-context.xml]] with [Generic bean: class [com.example.app.HungarianGreetingService]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [client-context.xml]]
 ```
 
+Conclusion
+
+In the `client-with-java-config` module the default is the `HungarianGreetingService` which is always overridden by the `DutchGreetingService` from `legacy-module`.
+We cannot control the ordering of the resources using Spring Java config when a combined application context is created.

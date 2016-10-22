@@ -59,8 +59,10 @@ ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 );
 ```
 Note that the order of the resources passed as constructor arguments to `ClassPathXmlApplicationContext` matter. Having the `client-context.xml` second with its own `GreetingService` defined in it, makes sure that this will be used.
-In the logs you will see:
+
+In the logs you will see the following:
 
 ```
 INFO o.s.b.f.s.DefaultListableBeanFactory - Overriding bean definition for bean 'greetingService' with a different definition: replacing [Generic bean: class [com.example.service.DutchGreetingService]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/spring/module-context.xml]] with [Generic bean: class [com.example.app.HungarianGreetingService]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [client-context.xml]]
 ```
+

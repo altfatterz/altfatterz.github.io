@@ -58,7 +58,7 @@ ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
     "classpath:/client-context.xml"
 );
 ```
-Note that the order of the resources passed as constructor arguments to `ClassPathXmlApplicationContext` matter. Having the `client-context.xml` second with its own `greetingService` defined in it, makes sure that this will be used.
+Note that the order of the resources passed as constructor arguments to `ClassPathXmlApplicationContext` matter. Having the `client-context.xml` second with its own `GreetingService` defined in it, makes sure that this will be used.
 In the logs you will see:
 
 ```

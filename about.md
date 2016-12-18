@@ -12,7 +12,7 @@ Some fun facts about the setup of this blog:
 * Built with [Jekyll](http://jekyllrb.com)
 * Coded on a Mac in the Netherlands
 * Hosted for free on [GitHub Pages](https://github.com/altfatterz/altfatterz.github.io)
-* Designed and developed while listening to music like [Idenline](https://soundcloud.com/idenline/idenline-together)
+* Designed and developed while listening to music like [Stairway to Heaven](https://soundcloud.com/boot-led-zeppelin/stairway-to-heaven)
 
 Have questions or suggestions? [ask me on Twitter](https://twitter.com/altfatterz).
 

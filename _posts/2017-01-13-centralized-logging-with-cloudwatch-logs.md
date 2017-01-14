@@ -4,7 +4,7 @@ title: Centralized logging with CloudWatch Logs
 tags: [aws, cloudwatch, spring]
 ---
 
-In this blog post we will see how we can leverage [Amazon CloudWatch Logs](https://aws.amazon.com/cloudwatch/) for centralized logging in Amazon AWS environment.
+In this blog post we will see how we can leverage [Amazon CloudWatch Logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html) for centralized logging in Amazon AWS environment.
 A [demo application](https://github.com/altfatterz/cloudwatch-logs-demo) is provided to see things in action. The plan is the following:
  
 1. deploy the application on an EC2 instance 
@@ -273,7 +273,7 @@ One `log event` inside a `log stream`:
 
 <p><img src="/images/cloudwatchlogs2.png" alt="Log Group" /></p>
 
-As you can see the we needed quite a lot of configuration to set everything up. In a next post we will see how we can make this simpler with [Boxfuse](https://boxfuse.com/)
+As you can see we needed quite a lot of configuration to set everything up. In a next post we will see how we can make this simpler with [Boxfuse](https://boxfuse.com/)
 
 
 

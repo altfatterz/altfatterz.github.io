@@ -100,7 +100,6 @@ We upload all our artifacts needed to run the service to S3 and during launching
 
 ```bash
 $ aws s3 cp target/cloudwatch-logs-demo-0.0.1.jar s3://spring-boot-examples/cloudwatch-logs-demo/
-$ aws s3 cp logback.xml s3://spring-boot-examples/cloudwatch-logs-demo/
 $ aws s3 cp cloudwatch-logs-demo.conf s3://spring-boot-examples/cloudwatch-logs-demo/
 $ aws s3 cp awslogs/awscli.conf s3://spring-boot-examples/cloudwatch-logs-demo/
 $ aws s3 cp awslogs/awslogs.conf s3://spring-boot-examples/cloudwatch-logs-demo/
@@ -155,7 +154,6 @@ mkdir /opt/cloudwatch-logs-demo
 
 # download the maven artifact from S3
 aws s3 cp s3://spring-boot-examples/cloudwatch-logs-demo/cloudwatch-logs-demo-0.0.1.jar /opt/cloudwatch-logs-demo/cloudwatch-logs-demo.jar --region=eu-central-1
-aws s3 cp s3://spring-boot-examples/cloudwatch-logs-demo/logback.xml /opt/cloudwatch-logs-demo/ --region=eu-central-1
 aws s3 cp s3://spring-boot-examples/cloudwatch-logs-demo/cloudwatch-logs-demo.conf /opt/cloudwatch-logs-demo/ --region=eu-central-1
 aws s3 cp s3://spring-boot-examples/cloudwatch-logs-demo/awscli.conf /etc/awslogs/awscli.conf --region=eu-central-1
 aws s3 cp s3://spring-boot-examples/cloudwatch-logs-demo/awslogs.conf /etc/awslogs/awslogs.conf --region=eu-central-1

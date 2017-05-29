@@ -3,7 +3,7 @@ layout: page
 title: About
 ---
 
-Zoltan Altfatter ([@altfatterz](https://twitter.com/altfatterz)) is a software engineer living and working in Utrecht, the Netherlands.
+Zoltan Altfatter ([@altfatterz](https://twitter.com/altfatterz)) is a software engineer living and working in Zürich, Switzerland.
 
 ## About the site
 

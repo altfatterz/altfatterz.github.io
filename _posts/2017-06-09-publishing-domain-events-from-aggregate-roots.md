@@ -5,7 +5,7 @@ tags: [springdata, spring]
 ---
 
 Starting with Spring Data Ingalls release publishing domain events by aggregate roots becomes easier. Instead of leveraging Spring's `ApplicationEventPublisher` you can use `@DomainEvents` annotation on a method of your aggregate root.
-Let's look at an example.
+Let's look at an [example](https://github.com/altfatterz/publishing-domain-events).
 
 ```java
 class BankTransfer {

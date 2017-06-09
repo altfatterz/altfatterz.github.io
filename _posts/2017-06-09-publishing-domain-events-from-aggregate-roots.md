@@ -22,7 +22,7 @@ class BankTransfer {
 }
 ```
 
-The method annotated with `@DomainEvents` will be called if one of the `save()` methods of a Spring Data repository is called. The method can return a single event instance or a collection of events and cannot have any arguments. After all events have been published a method annotated with `@AfterDomainEventsPublication` is called.
+The method annotated with `@DomainEvents` will be called if one of the `save()` methods of the Spring Data repository is called. The method can return a single event instance or a collection of events and cannot have any arguments. After all events have been published a method annotated with `@AfterDomainEventsPublication` is called.
 
 Spring Data Commons provides a convenient base class (`AbstractAggregateRoot`) to help to register domain events and is using the publication mechanism implied by `@DomainEvents` and `@AfterDomainEventsPublication`   
   
@@ -57,8 +57,8 @@ public class AbstractAggregateRoot {
 	}
 }
 ```
-  
-Let's modify the example to extend from `AbstractAggregateRoot` base class.
+
+The `@Getter(onMethod = @__(@DomainEvents))` [Lombok](https://projectlombok.org/) construct makes sure that the `@DomainEvents` annotation is put on the generated getter method. Let's modify the example to extend from `AbstractAggregateRoot` base class.
   
 ```java
 public class BankTransfer extends AbstractAggregateRoot {
@@ -75,7 +75,7 @@ public class BankTransfer extends AbstractAggregateRoot {
 }
 ```
 
-In the example The `BankTransfer` aggregate root publishes a `BankTransferCompletedEvent` when its `complete` method is called.
+In the example the `BankTransfer` aggregate root registers a `BankTransferCompletedEvent` when its `complete` method is called.
 The client calls this method in a transactional context saving the BankTransfer also via Spring Data Repository abstraction, which triggers the publication of `BankTransferCompletedEvent` event.
 
 ```java
@@ -130,12 +130,10 @@ public class BankTransferProcessor {
 }
 ``` 
 
-In the example the `@Async` is used to return immediately the service call.   
-  
+In the example the `@Async` is used to return immediately the client without waiting for the processing of the bank transfer.   
   
 ```bash
-$ echo 
-      '{
+$ echo '{
             "from":"DE89 3704 0044 0532 0130 00",
             "to":"HU42 1177 3016 1111 1018 0000 0000",
             "amount":100.25
@@ -149,6 +147,8 @@ Date: Thu, 04 May 2017 13:54:12 GMT
     "bankTransferId": "783b9b13-8424-4004-b59f-eef400d8a52c"
 }      
 ```
+
+Retrieving the details of the bank transfer:
 
 ```bash
 $ http :8080/bank-transfers/783b9b13-8424-4004-b59f-eef400d8a52c

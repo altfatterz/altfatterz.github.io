@@ -112,3 +112,21 @@ brew install rabbitmq
 ```bash
 brew services start rabbitmq
 ```
+
+```
+maven://<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+```
+
+Register multiple apps at one time, you can store them in a properties file with <type>.<name>
+```bash
+stream.source-app=
+stream.processor-app=
+stream.sink-app=
+```
+
+and then you can import them via:
+
+```
+dataflow:>app import --uri file:///tmp/my-stream-apps.properties
+```
+Look into: https://github.com/spring-cloud/spring-cloud-dataflow/blob/master/spring-cloud-dataflow-docs/src/main/asciidoc/streams.adoc

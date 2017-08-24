@@ -4,7 +4,15 @@ title: Streaming with Spring Cloud Data Flow
 tags: [springcloud]
 ---
 
-Streaming with Spring Cloud Data Flow
+In this blog post I wanted to create the "Hello World" streaming example using Spring Cloud Data Flow which helps to create a microservices architecture for ingesting, transforming and storing data.   
+Spring Cloud Data Flow originates from Spring XD which was standalone project to build distributed data pipelines for real-time and batch processing.
+
+In contrast to Spring XD, in Spring Cloud Data Flow the modules are autonomous deployable Spring Boot apps, which can be run individually with java -jar. 
+These Spring Boot apps can use Spring Cloud Stream to quickly build a message-driven microservice, where the messaging middleware (like Apache Kafka, RabbitMQ, etc) is abstracted away.
+In the Spring Cloud Stream terminology streams are made up `sources`, `sinks` and optionally `processors`.
+
+Below you can see a simple `source` application which with the help of `InputChannelAdapter` annotation sends a message to the output channel of the `source` using an auto-configured poller which can be further customized using the `spring.integration.poller` property.
+The `EnableBinding` annotation triggers the Spring Cloud Stream infrastructure.
 
 ```java
 @EnableBinding(Source.class)
@@ -20,8 +28,8 @@ public class SourceApp {
         return new Date().toString();
     }
 }
-
 ```
+
 
 ```java
 @EnableBinding(Sink.class)

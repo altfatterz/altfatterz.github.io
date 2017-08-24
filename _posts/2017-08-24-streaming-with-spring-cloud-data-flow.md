@@ -4,11 +4,11 @@ title: Streaming with Spring Cloud Data Flow
 tags: [springcloud]
 ---
 
-In this blog post I want to show how to create a "Hello World" streaming example using Spring Cloud Data Flow which simplifies the development and deployment of applications focused on data processing use-cases.
-Spring Cloud Data Flow originates from Spring XD which was a standalone project to build distributed data pipelines for real-time and batch processing.
+In this blog post I want to show how to create a "Hello World" streaming example using [Spring Cloud Data Flow](http://cloud.spring.io/spring-cloud-dataflow/) which simplifies the development and deployment of applications focused on data processing use-cases.
+Spring Cloud Data Flow originates from [Spring XD](https://github.com/spring-projects/spring-xd) which was a standalone project to build distributed data pipelines for real-time and batch processing.
 
 In contrast to Spring XD, in Spring Cloud Data Flow the modules are autonomous deployable Spring Boot apps, which can be run individually with java -jar. 
-These Spring Boot apps can use Spring Cloud Stream to quickly build a message-driven microservice, where the messaging middleware (like Apache Kafka, RabbitMQ, etc) is abstracted away.
+These Spring Boot apps can use [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/) to quickly build a message-driven microservice, where the messaging middleware (like Apache Kafka, RabbitMQ, etc) is abstracted away.
 In `Spring Cloud Stream` terminology streams are made up of `sources`, `sinks` and optionally `processors`.
 
 Below you can see a simple `source` application which with the help of `@InputChannelAdapter` annotation sends a message every second to the output channel of the `source` using an auto-configured poller which can be further customized using the `spring.integration.poller` property.
@@ -75,7 +75,7 @@ The user can define its own interface specified at `@EnableBinding` annotation.
 
 ### Running the applications without Spring Cloud Data Flow
 
-In this example I am using RabbitMQ as a messaging middleware. Binding properties needs to be set in order for the applications to know which `exchange` send to or receive from the messages.
+In this example I am using RabbitMQ as a messaging middleware. Binding properties needs to be set in order for the applications to know to which `exchange` send or receive from the messages.
 
 ```bash
 java -jar target/sink-app-0.0.1-SNAPSHOT.jar \ 
@@ -87,15 +87,14 @@ java -jar target/source-app-0.0.1-SNAPSHOT.jar \
     --spring.cloud.stream.bindings.output.destination: demo 
 ```   
 
-Here it is specified that messages produced by the `source-app` should be sent to the `demo` exchange, from where the `processor-app` should take the messages, processes them and should put them on the `demo-processed` exchange from where finally the `sink-app` should take the messages and print them out. 
+Here it is specified that messages produced by the `source-app` should be sent to the `demo` exchange, from where the `processor-app` should take the messages, process them and should put them on the `demo-processed` exchange from where finally the `sink-app` should take the messages and print them out. 
 
 After starting first RabbitMQ and then all the three applications you should see the that the `sink-app` receives the processed messages:
 
 ```bash
-2017-08-24 16:38:44.036  INFO 5850 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8082 (http)
-2017-08-24 16:38:44.038  INFO 5850 --- [           main] com.example.sinkapp.SinkApp              : Started SinkApp in 13.578 seconds (JVM running for 14.81)
-2017-08-24 16:39:23.712  INFO 5850 --- [u2IdLMiby6OzA-1] com.example.sinkapp.SinkApp              : received Thu Aug 24 16:39:23 CEST 2017 processed
-2017-08-24 16:39:24.581  INFO 5850 --- [u2IdLMiby6OzA-1] com.example.sinkapp.SinkApp              : received Thu Aug 24 16:39:24 CEST 2017 processed
+2017-08-24 com.example.sinkapp.SinkApp : Started SinkApp in 13.578 seconds (JVM running for 14.81)
+2017-08-24 com.example.sinkapp.SinkApp : received Thu Aug 24 16:39:23 CEST 2017 processed
+2017-08-24 com.example.sinkapp.SinkApp : received Thu Aug 24 16:39:24 CEST 2017 processed
 ...
 ```
 
@@ -104,21 +103,21 @@ After starting first RabbitMQ and then all the three applications you should see
 So far so good, now let's try to run the applications with Spring Cloud Data Flow.
 In this example I am using the recently released [1.3.0.M1](https://spring.io/blog/2017/08/07/spring-cloud-data-flow-1-3-0-m1-released) version which comes with a nice Angular 4 based [Dashboard UI](http://cloud.spring.io/spring-cloud-dataflow-ui/).
 
-The runtime in Spring Cloud Data Flow is very flexible. The currently runtimes are: 
+The runtime in Spring Cloud Data Flow is very flexible. The currently supported runtimes are: 
 1. Cloud Foundry
 2. Apache YARN
 3. Kubernetes
 4. Apache Mesos
 5. Local Server for development
 
-To make things simple here I am going to use the local server of the Spring Cloud Data Flow.
+To make things simple here I am going to use the Local Server version.
 
 ```bash
 wget http://repo.spring.io/milestone/org/springframework/cloud/spring-cloud-dataflow-server-local/1.3.0.M1/spring-cloud-dataflow-server-local-1.3.0.M1.jar
 java -jar spring-cloud-dataflow-server-local-1.3.0.M1.jar
 ```
 
-After it is up and running you can access its UI at `http://localhost:9393/dashboard/#/apps`
+After it is up and running you can access the built-in UI at `http://localhost:9393/dashboard/#/apps`
 
 Spring Cloud Data Flow comes with a shell which can also be used interact with the server using `stream DSL`. In this example we are going to use this one, instead of the dashboard UI.
 
@@ -127,7 +126,7 @@ wget http://repo.spring.io/milestone/org/springframework/cloud/spring-cloud-data
 java -jar spring-cloud-dataflow-shell-1.3.0.M1.jar
 ```
 
-Before deploying the applications make sure the applications are installed in your maven repository, since we are using here Spring Boot uber-jar hosted in maven repository. Applications packaged as a docker container is also supported. 
+Before deploying the applications make sure the applications are installed in your maven repository, since we are using here Spring Boot uber-jar packaging, hosted in local maven repository. Applications packaged as a docker container is also supported. 
 After the shell is up and running we need to register the applications. 
 
 ```bash
@@ -145,11 +144,11 @@ dataflow:>app list
 ╚══════════╧═════════════╧════════╧════╝
 ```
 
-You can also check in the dashboard UI the result is the same:
+You can also check the deployed applications in the Dashboard UI:
 
 <p><img src="/images/2017-08-22/scdf-apps.png" alt="Spring Cloud Data Flow - Apps" /></p>
 
-Another option is to register multiple apps at once, you can define them in a properties file with keys <type>.<name>. For example in the `my-apps.properties`
+Another option is to register multiple apps at once. You can define them in a properties file with keys `<type>.<name>.` For example in the `my-apps.properties`.
 
 ```bash
 stream.source-app=maven://com.example:source-app:jar:0.0.1-SNAPSHOT
@@ -193,7 +192,7 @@ dataflow:>stream list
 
 <p><img src="/images/2017-08-22/scdf-runtime.png" alt="Spring Cloud Data Flow - Runtime" /></p>
 
-If the stream is deployed successfully you should check the `sink-app` log file in order to verify that receives the processed messages. 
+If the stream is deployed successfully you should check the `sink-app` log file in order to verify that it receives the processed messages. 
 
 ```bash
 ...
@@ -212,7 +211,7 @@ If the stream is deployed successfully you should check the `sink-app` log file 
 ...
 ```
 
-You can access the source code on my [github](http://altfatterz.github.io/spring-cloud-dafaflow-streaming-example). In a following post I will look into short lived application support using Spring Cloud Task and how this integrates again with Spring Cloud Data Flow. We might even use Kubernetes as runtime instead of Local Server, so stay tuned :)
+You can access the source code on my [github](https://github.com/altfatterz/spring-cloud-dataflow-streaming-example). In a following post I will look into short lived application support using [Spring Cloud Task](https://cloud.spring.io/spring-cloud-task/) and how this integrates again with Spring Cloud Data Flow. We might even use Kubernetes as runtime instead of Local Server, so stay tuned :)
 
 Happy coding & learning!
 

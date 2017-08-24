@@ -9,10 +9,10 @@ Spring Cloud Data Flow originates from Spring XD which was standalone project to
 
 In contrast to Spring XD, in Spring Cloud Data Flow the modules are autonomous deployable Spring Boot apps, which can be run individually with java -jar. 
 These Spring Boot apps can use Spring Cloud Stream to quickly build a message-driven microservice, where the messaging middleware (like Apache Kafka, RabbitMQ, etc) is abstracted away.
-In the Spring Cloud Stream terminology streams are made up `sources`, `sinks` and optionally `processors`.
+In `Spring Cloud Stream` terminology streams are made up `sources`, `sinks` and optionally `processors`.
 
-Below you can see a simple `source` application which with the help of `InputChannelAdapter` annotation sends a message to the output channel of the `source` using an auto-configured poller which can be further customized using the `spring.integration.poller` property.
-The `EnableBinding` annotation triggers the Spring Cloud Stream infrastructure.
+Below you can see a simple `source` application which with the help of `@InputChannelAdapter` annotation sends a message to the output channel of the `source` using an auto-configured poller which can be further customized using the `spring.integration.poller` property.
+The `@EnableBinding` annotation triggers the Spring Cloud Stream infrastructure.
 
 ```java
 @EnableBinding(Source.class)
@@ -30,6 +30,7 @@ public class SourceApp {
 }
 ```
 
+In the `sink` application with the help `@StreamListener` annotation the application receives messages from the input channel of the `sink`. 
 
 ```java
 @EnableBinding(Sink.class)
@@ -41,12 +42,15 @@ public class SinkApp {
         SpringApplication.run(SinkApp.class, args);
     }
 
-    @ServiceActivator(inputChannel = Sink.INPUT)
+    @StreamListener(Sink.INPUT)
     public void logger(String payload) {
         log.info("received {}", payload);
     }
 }
+
 ```
+
+And finally there is a simple `processor` application which transforms the received messages. 
 
 ```java
 @SpringBootApplication
@@ -65,6 +69,16 @@ public class ProcessorApp {
     }
 }
 ```
+
+The parameter specified in the `@EnableBinding` annotation (`Sink`, `Source`, `Processor`) are defined in Spring Cloud Stream. They are for convenience and they use the `@Input` annotation to define an input channel (through which received messages enter the application),  
+and use the `@Output` annotation to define an output channel (through which published messages leave the application). 
+The user can define its own interface specified at `@EnableBinding` annotation.
+
+#### Running the applications without Spring Cloud Data Flow
+
+
+
+#### Running the applications with Spring Cloud Data Flow
 
 #### Register the applications
 

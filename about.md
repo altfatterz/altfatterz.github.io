@@ -10,7 +10,7 @@ Zoltan Altfatter ([@altfatterz](https://twitter.com/altfatterz)) is a software e
 Some fun facts about the setup of this blog:
 
 * Built with [Jekyll](http://jekyllrb.com)
-* Coded on a Mac in the Netherlands
+* Created on a Mac in Switzerland 
 * Hosted for free on [GitHub Pages](https://github.com/altfatterz/altfatterz.github.io)
 * Designed and developed while listening to music like [Stairway to Heaven](https://soundcloud.com/boot-led-zeppelin/stairway-to-heaven)
 

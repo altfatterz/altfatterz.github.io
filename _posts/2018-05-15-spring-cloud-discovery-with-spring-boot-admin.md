@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Spring Boot Admin
+title: Spring Cloud Discovery with Spring Boot Admin
 tags: [springbootadmin, springcloud, spring]
 ---
 

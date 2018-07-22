@@ -31,7 +31,7 @@ spring:
           uri: file://${user.home}/projects/cloudfoundry/config-repo
 ```
 
-Inside the `config-repo` we create an example `foo-service.yml` (`foo-service` will be our client application) file with the content
+Inside the `config-repo` we create an example `foo-service.yml` ([foo-service](https://github.com/altfatterz/foo-service) will be our client application) file with the content
 
 ```yaml
 foo:

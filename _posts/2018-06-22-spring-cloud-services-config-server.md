@@ -1,10 +1,10 @@
 ---
 layout: post
 title: Spring Cloud Services - Config Server
-tags: [springcloudservices, springcloud, spring]
+tags: [springcloud, spring, cloudfoundry]
 ---
 
-Spring Cloud Config is a great tool to externalize configuration in a microservice architecture. It has server and client side support. In this blog post we are going to look into how to set up the server part locally and on Cloud Foundry and use it with a client application.
+[Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/) is a great tool to externalize configuration in a microservice architecture. It has server and client side support. In this blog post we are going to look into how to set up the server part locally and on Cloud Foundry and use it with a client application.
 
 ### Config Server running locally
 
@@ -16,7 +16,7 @@ spring cloud --list
 configserver dataflow eureka h2 hystrixdashboard kafka zipkin
 ``` 
 
-By default running `spring cloud configserver` it will run in the "native" profile and serving configuration from the local directory ./launcher
+By default running `spring cloud configserver` it will run in the "native" profile and serving configuration from the local directory ./launcher.
 We can customise the config server with a `configserver.yml` file inside the `~/.spring-cloud` folder
 
 ```yaml
@@ -84,7 +84,7 @@ http :8888/foo-service/default
 }
 ```
 
-After starting the `foo-service` application we can see in the logs:
+After starting the `foo-service` client application we can see in the logs:
 
 ```
 [           main] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888

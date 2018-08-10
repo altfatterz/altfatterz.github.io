@@ -239,7 +239,7 @@ public class SpringBootAdmin {
 }
 ```
 
-<p><img src="/images/2018-08-06/spring-boot-admin.png" alt="Spring Boot Admin" /></p>
+<p><img src="/images/2018-08-10/spring-boot-admin.png" alt="Spring Boot Admin" /></p>
 
 ### Service Registry on Pivotal Cloud Foundry (PCF)
 
@@ -312,7 +312,7 @@ http customer-service-shy-mandrill.cfapps.io/customers/1
 
 and the Spring Boot Admin console available at:
 
-<p><img src="/images/2018-08-06/spring-boot-admin2.png" alt="Spring Boot Admin" /></p>
+<p><img src="/images/2018-08-10/spring-boot-admin2.png" alt="Spring Boot Admin" /></p>
 
 Good practice to set passwords in environment variables. In the Spring Boot Admin we used the following:
 

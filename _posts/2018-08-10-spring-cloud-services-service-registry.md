@@ -241,7 +241,7 @@ public class SpringBootAdmin {
 
 <p><img src="/images/2018-08-06/spring-boot-admin.png" alt="Spring Boot Admin" /></p>
 
-### Discovery Service on Pivotal Cloud Foundry (PCF)
+### Service Registry on Pivotal Cloud Foundry (PCF)
 
 So far so good. Let's setup this little example on a [Pivotal Web Services](https://run.pivotal.io/) (an instance of PCF hosted by Pivotal) where we will use the Service Registry service (`trial` plan) from [Spring Cloud Services](https://docs.pivotal.io/spring-cloud-services)
 

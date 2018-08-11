@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Setting up X-Pack Security
-tags: [elasticsearch, xpack]
+tags: [elasticsearch, kibana, XPack, elastic]
 ---
 
 X-Pack is a group of plugins for Elasticsearch and Kibana which enhances the functionality of the Elastic Stack. We will focus in this blog post on the `Security` plugin but there are other plugins for `Monitoring`, `Graph` and `Machine Learning`.

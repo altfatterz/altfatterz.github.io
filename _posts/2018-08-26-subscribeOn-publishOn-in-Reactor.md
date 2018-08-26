@@ -1,6 +1,6 @@
 ---
 layout: post
-title: subscribeOn and publishOn operators in a reactive pipeline
+title: subscribeOn and publishOn operators in Reactor
 tags: [projectreactor, reactivestreams]
 ---
 

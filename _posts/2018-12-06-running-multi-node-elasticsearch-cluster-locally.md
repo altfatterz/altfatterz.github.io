@@ -205,7 +205,7 @@ In order to enable `security` we need to add the following into the `elasticsear
 xpack.security.enabled: true
 ```   
 
-After restarting the nodes you will get `401 Unauthorized` when using the following command:
+After restarting the nodes you will get `401 Unauthorized` for all Elastic HTTP endpoints without specifying credentials.
 
 ```bash
 $ http :9200
@@ -239,7 +239,7 @@ We can set the passwords for the reserved users `elastic`, `apm_system`, `kibana
 $ ./bin/elasticsearch-setup-passwords interactive
 ```
 
-For this blog example I set the password `elastic` for password for each reserved users.
+For this blog example I set`elastic` as password for each reserved user.
 
 ```bash
 $ http :9200 -a elastic:elastic
@@ -257,7 +257,7 @@ elasticsearch.password: "elastic"
 
 <p><img src="/images/2018-12-06/kibana.png" alt="Kibana with authentication" /></p>
 
-And now you can login with the `elastic` user. 
+And now we can login with the `elastic` user. 
 
 ### Conclusion
 

@@ -4,7 +4,7 @@ title: Deploy to local and remote Kubernetes cluster
 tags: [minikube, kubernetes, docker, springboot]
 ---
 
-In this blog post we look into how to setup the development environment when deploying to a Kubernetes cluster. We will use a simple Spring Boot service which we deploy to a local Kubernetes cluster (using [`Minikube`](https://zoltanaltfatter.com/2019/01/03/deploy-to-local-and-remote-kubernetes-cluster/)) and also to a remote Kubernetes cluster (using [`GKE`](https://cloud.google.com/kubernetes-engine/)).
+In this blog post we look into how to setup the development environment when deploying to a Kubernetes cluster. We will use a simple Spring Boot service which we deploy to a local Kubernetes cluster (using [`Minikube`](https://kubernetes.io/docs/setup/minikube/)) and also to a remote Kubernetes cluster (using [`GKE`](https://cloud.google.com/kubernetes-engine/)).
 
 ### Local Kubernetes cluster
 

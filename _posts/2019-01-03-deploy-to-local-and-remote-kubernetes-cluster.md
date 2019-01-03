@@ -4,7 +4,7 @@ title: Deploy to local and remote Kubernetes cluster
 tags: [minikube, kubernetes, docker, springboot]
 ---
 
-In this blog post we look into how to setup the development environment when deploying to a Kubernetes cluster. We will use a simple Spring Boot service which we deploy to a local Kubernetes cluster (using `Minikube`) and also to a remote Kubernetes cluster (using GKE).
+In this blog post we look into how to setup the development environment when deploying to a Kubernetes cluster. We will use a simple Spring Boot service which we deploy to a local Kubernetes cluster (using [`Minikube`](https://zoltanaltfatter.com/2019/01/03/deploy-to-local-and-remote-kubernetes-cluster/)) and also to a remote Kubernetes cluster (using [`GKE`](https://cloud.google.com/kubernetes-engine/)).
 
 ### Local Kubernetes cluster
 
@@ -356,7 +356,7 @@ $ kubectl config current-context
 gke_default-project-id_europe-west3-a_demo
 ```
 
-If you created the cluster using the Google Cloud Platform Console you can fetch the context information using:
+If you created the cluster using the [Google Cloud Platform Console](https://console.cloud.google.com/) you can fetch the context information using:
 
 ```bash
 $ gcloud container clusters get-credentials demo
@@ -436,7 +436,7 @@ with the command:
 $ kubectl create -f gke.yml
 ```
 
-We wait until a load balancer is provisioned and we get an external IP. Note that used the `LoadBalancer` value in the `spec.type` for the service, while in case of minikube this was `NodePort`
+We wait until a load balancer is provisioned and we get an external IP. Note the used `LoadBalancer` value in the `spec.type` for the service, while in case of minikube this was `NodePort`
 
 ```bash
 $ kubectl get svc
@@ -483,7 +483,7 @@ With the `watch kubectl get pods` command we will see that the pods are re-creat
 Congratulations! If you followed along you deployed a very simple Spring Boot application to a local and remote Kubernetes cluster. 
 The example service you can find on my github account [https://github.com/altfatterz/kubernetes-demo](https://github.com/altfatterz/kubernetes-demo)
 
-Don't forget to remove to delete your remote Kubernetes cluster:
+Don't forget to delete the demo remote Kubernetes cluster:
 
 ```bash
 gcloud container clusters delete demo

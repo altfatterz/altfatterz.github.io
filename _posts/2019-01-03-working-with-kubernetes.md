@@ -4,7 +4,7 @@ title: Setup your Kubernetes development environment
 tags: [minikube, kubernetes, docker]
 ---
 
-In this blog post we look into how to setup the development environment when working with Kubernetes. We will use a simple Spring Boot service which we deploy to a local Kubernetes cluster (using `Minikube`) and also to a remote Kubernetes cluster (using GKE).
+In this blog post we look into how to setup the development environment when deploying to a Kubernetes cluster. We will use a simple Spring Boot service which we deploy to a local Kubernetes cluster (using `Minikube`) and also to a remote Kubernetes cluster (using GKE).
 
 ### Local Kubernetes cluster
 
@@ -62,7 +62,7 @@ Server Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.0", GitCom
 $ minikube dashboard
 ```
 
-Next we create the `Dockerfile` for our demo Spring Boot service
+Next we create the `Dockerfile` for our demo Spring Boot service. For more information about Spring Boot in a container see Dave Syer's (@david_syer) excellent blog post [https://spring.io/blog/2018/11/08/spring-boot-in-a-container](https://spring.io/blog/2018/11/08/spring-boot-in-a-container) 
 
 ```dockerfile
 FROM openjdk:8-jdk-alpine
@@ -231,21 +231,20 @@ $ kubectl delete deployment kubernetes-demo-deployment
 
 ### Running the demo service on Kubernetes Engine
 
-Let's install first Google Cloud SDK
+Let's install first [Google Cloud SDK](https://cloud.google.com/sdk/)
 
 ```bash
 $ brew cask install google-cloud-sdk
 ```
 
-This will install `glcoud` and `gsutil` among other utilities. The `gcloud` is the command-line interface for GCP. 
+This will install `glcoud` and `gsutil` among other utilities. The `gcloud` is the command-line interface for [GCP](https://cloud.google.com). 
 After creating a project and enabling billing at `https://console.cloud.google.com/` initialize `gcloud` setting up the region and zone. 
-
 
 ```bash
 $ gcloud init
 ```
 
-The list of regions and zones you can find here: https://cloud.google.com/compute/docs/regions-zones/. Choose a region close to you, in our case was:
+The list of regions and zones you can find here: [https://cloud.google.com/compute/docs/regions-zones/](https://cloud.google.com/compute/docs/regions-zones/). Choose a region close to you, in our case was:
 
 ```bash
 $ gcloud config list
@@ -287,13 +286,13 @@ The hostname specifies the region of the registry's storage. We are going to use
 We need to tag the image with the registry name like `[HOSTNAME]/[PROJECT-ID]/[IMAGE]`
 
 ```bash
-$ docker tag altfatterz/kubernetes-hello-world eu.gcr.io/default-project-id/kubernetes-hello-world
+$ docker tag altfatterz/kubernetes-demo eu.gcr.io/default-project-id/kubernetes-demo
 ```
 
-Next we push the image to Google's Container Registry. Here we push the image with the `latest` tag. 
+Next we push the image to [Google's Container Registry](https://cloud.google.com/container-registry/). Here we push the image with the `latest` tag. 
 
 ```bash
-$ docker push eu.gcr.io/default-project-id/kubernetes-hello-world
+$ docker push eu.gcr.io/default-project-id/kubernetes-demo
 ```
 
 List the created image using: 
@@ -301,7 +300,7 @@ List the created image using:
 ```bash
 $ gcloud container images list --repository=eu.gcr.io/default-project-id
 
-eu.gcr.io/default-project-id/kubernetes-hello-world
+eu.gcr.io/default-project-id/kubernetes-demo
 ```
 
 You need to use the `--repository` since by default images only from `gcr.io/default-project-id` repository are listed.
@@ -337,16 +336,16 @@ Behind the scenes it will create `Google Compute Engine` instances and configure
 $ gcloud compute instances list
 
 NAME                                 ZONE            MACHINE_TYPE   PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP    STATUS
-gke-demo-default-pool-0dfd5a41-ghl3  europe-west3-a  n1-standard-1               10.156.0.4   35.246.206.79  RUNNING
-gke-demo-default-pool-0dfd5a41-h082  europe-west3-a  n1-standard-1               10.156.0.2   35.234.125.62  RUNNING
-gke-demo-default-pool-0dfd5a41-mcz9  europe-west3-a  n1-standard-1               10.156.0.3   35.234.72.163  RUNNING
+gke-demo-default-pool-6067d6ae-20w8  europe-west3-a  n1-standard-1               10.156.0.4   35.246.129.94   RUNNING
+gke-demo-default-pool-6067d6ae-8zv7  europe-west3-a  n1-standard-1               10.156.0.3   35.246.135.149  RUNNING
+gke-demo-default-pool-6067d6ae-wgmp  europe-west3-a  n1-standard-1               10.156.0.2   35.234.121.25   RUNNING
 
 $ kubectl get nodes
 
 NAME                                  STATUS   ROLES    AGE   VERSION
-gke-demo-default-pool-0dfd5a41-ghl3   Ready    <none>   41m   v1.10.9-gke.5
-gke-demo-default-pool-0dfd5a41-h082   Ready    <none>   41m   v1.10.9-gke.5
-gke-demo-default-pool-0dfd5a41-mcz9   Ready    <none>   41m   v1.10.9-gke.5
+gke-demo-default-pool-6067d6ae-20w8   Ready    <none>   2m    v1.10.9-gke.5
+gke-demo-default-pool-6067d6ae-8zv7   Ready    <none>   2m    v1.10.9-gke.5
+gke-demo-default-pool-6067d6ae-wgmp   Ready    <none>   2m    v1.10.9-gke.5
 ```
 
 When we created the cluster using the `gcloud container clusters create` command it also changed the context which is used by `kubectl`
@@ -360,7 +359,7 @@ gke_default-project-id_europe-west3-a_demo
 If you created the cluster using the Google Cloud Platform Console you can fetch the context information using:
 
 ```bash
-$ gcloud container clusters get-credentials hello-world 
+$ gcloud container clusters get-credentials demo
 
 Fetching cluster endpoint and auth data.
 kubeconfig entry generated for hello-world.
@@ -384,115 +383,108 @@ And finally in order to discover the started services we can use:
 
 $ kubectl cluster-info
 
-Kubernetes master is running at https://35.246.211.157
-GLBCDefaultBackend is running at https://35.246.211.157/api/v1/namespaces/kube-system/services/default-http-backend:http/proxy
-Heapster is running at https://35.246.211.157/api/v1/namespaces/kube-system/services/heapster/proxy
-KubeDNS is running at https://35.246.211.157/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-Metrics-server is running at https://35.246.211.157/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+Kubernetes master is running at https://35.242.207.215
+GLBCDefaultBackend is running at https://35.242.207.215/api/v1/namespaces/kube-system/services/default-http-backend:http/proxy
+Heapster is running at https://35.242.207.215/api/v1/namespaces/kube-system/services/heapster/proxy
+KubeDNS is running at https://35.242.207.215/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://35.242.207.215/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 ```
 
-Let's deploy now our demo service to GKE. First we tag the image 
-
-
-
-
-```bash
-$ kubectl get pod
-
-NAME                                                READY   STATUS    RESTARTS   AGE
-kubernetes-hello-world-deployment-86f888b7f-fwgqk   1/1     Running   0          11m
-kubernetes-hello-world-deployment-86f888b7f-hhkct   1/1     Running   0          11m
-kubernetes-hello-world-deployment-86f888b7f-ktkkp   1/1     Running   0          11m
-```
-
-Get a shell to the running container: (the pod contains only one container, no need to use the `-c` option )
-
-```bash
-$ kubectl exec -it kubernetes-hello-world-deployment-86f888b7f-fwgqk -- /bin/sh
-/ # wget -q -O- http://localhost:8080/
-Hello World!
-/ # exit
-```
-
-Next we expose the service:
-
-```bash
-$ kubectl create -f kubernetes-hello-world-gcp-service.yml
-```
-
-The service needs to be externally accessible. In Kubernetes, you can instruct the underlying infrastructure to create an external load balancer, by specifying the Service Type as a `LoadBalancer`.
+Let's deploy now our demo service to GKE using the following `gke.yml`
 
 ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-demo-deployment
+  labels:
+    app: kubernetes-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kubernetes-demo
+  template:
+    metadata:
+      labels:
+        app: kubernetes-demo
+    spec:
+      containers:
+      - name: kubernetes-demo
+        image: eu.gcr.io/default-project-id/kubernetes-demo:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
 kind: Service
 apiVersion: v1
 metadata:
-  name: kubernetes-hello-world
+  name: kubernetes-demo
 spec:
   type: LoadBalancer
   selector:
-    app: kubernetes-hello-world
+    app: kubernetes-demo
   ports:
   - protocol: TCP
     port: 80
     targetPort: 8080
 ```
 
-It might take couple of minutes while the external load balancer is created. You should see an ip address in the `EXTERNAL-IP` field as below for the `kubernetes-hello-world` service
+with the command:
 
 ```bash
-zoal@zoltans-macbook-pro:~|⇒  kubectl get svc
-
-NAME                     TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
-kubernetes               ClusterIP      10.63.240.1     <none>          443/TCP        1h
-kubernetes-hello-world   LoadBalancer   10.63.247.113   35.234.125.62   80:30018/TCP   14m```
+$ kubectl create -f gke.yml
 ```
 
-Then you access it like:
+We wait until a load balancer is provisioned and we get an external IP. Note that used the `LoadBalancer` value in the `spec.type` for the service, while in case of minikube this was `NodePort`
 
 ```bash
-zoal@zoltans-macbook-pro:~|⇒  http http://35.234.125.62
+$ kubectl get svc
 
+NAME                      TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
+service/kubernetes-demo   LoadBalancer   10.55.243.231   <pending>       80:30625/TCP   39s
+```
+
+and we can test it using:
+
+```bash
+$ http <external-ip>
 HTTP/1.1 200
-Content-Length: 12
+Content-Length: 23
 Content-Type: text/plain;charset=UTF-8
-Date: Fri, 14 Dec 2018 15:25:34 GMT
+Date: Thu, 03 Jan 2019 11:12:46 GMT
 
-Hello World!
+Happy New Year 2019! :)
 ```
 
-### Update
+In the beginning, it might be important sometimes to get a shell to a running container:
 
-In development you might want to use the `latest` tag for your images and push the changes to the cluster.
-It turns out is not that easy, see discussion here: https://github.com/kubernetes/kubernetes/issues/27081
+```bash
+$ kubectl exec -it kubernetes-demo-deployment-656488699d-qsmrt -- sh
+/ # wget -q -O- http://localhost:8080/
+Happy New Year 2019! :)
+/ # exit
+```
+
+In development we might want to use the `latest` tag for your images and push the changes to the cluster.
+It turns out is not that easy, see discussion [here](https://github.com/kubernetes/kubernetes/issues/27081)
 
 First you make the changes on your code, build the docker image, push the docker image to Google's Container Registry then apply this trick
 
 ```bash
-$ kubectl patch deployment kubernetes-hello-world-deployment -p \
+$ kubectl patch deployment kubernetes-demo-deployment -p \
   "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 ```
 
-If you use `watch kubectl get pods` command you will see that the pods are re-created. 
+With the `watch kubectl get pods` command we will see that the pods are re-created. 
 
 ### Conclusion
 
+Congratulations! If you followed along you deployed a very simple Spring Boot application to a local and remote Kubernetes cluster. 
+The example service you can find on my github account [https://github.com/altfatterz/kubernetes-demo](https://github.com/altfatterz/kubernetes-demo)
 
-Note the load balancer is created when you push the service with `LoadBalanced`
+Don't forget to remove to delete your remote Kubernetes cluster:
 
 ```bash
-$ gcloud container clusters delete demo
+gcloud container clusters delete demo
 ```
-
-
-
-
-
-Resources:
-* https://spring.io/guides/gs/spring-boot-docker/
-* https://spring.io/guides/topicals/spring-boot-docker/
-* https://www.baeldung.com/spring-boot-minikube
-* https://cloudowski.com/articles/10-differences-between-openshift-and-kubernetes/
-* https://github.com/spotify/dockerfile-maven
-* https://www.baeldung.com/spring-boot-deploy-openshift
-* https://blog.containership.io/micronetes/
-* http://blog.christianposta.com/microservices/netflix-oss-or-kubernetes-how-about-both/

@@ -4,7 +4,7 @@ title: Spring Boot app on OpenShift
 tags: [springboot, openshift, kubernetes]
 ---
 
-In this blogpost we are showing how to deploy Spring Boot application to OpenShift levaraging the [fabric8-maven-plugin](https://github.com/fabric8io/fabric8-maven-plugin) and [Spring Cloud Kubernetes](https://spring.io/projects/spring-cloud-kubernetes)
+In this blogpost we are showing how to deploy a Spring Boot application to OpenShift levaraging the [fabric8-maven-plugin](https://github.com/fabric8io/fabric8-maven-plugin) and [Spring Cloud Kubernetes](https://spring.io/projects/spring-cloud-kubernetes)
 
 ### Minishift setup
 
@@ -106,7 +106,7 @@ https://<minishift-ip>:8443/console/
 After logging in as `developer`/`developer` we select the project `boot` created in the previous step.
 We make sure that the `boot` project is be visible in the top left corner, otherwise when creating resources we might create them in another project.  
 On the left we select the `catalog`, then `Databases` and then `Postgres`.
-Select `PostgreSQL` click `Next`, then `Create`, leaving everything at default. This will create a `PostgreSQL` database.
+Then we select `PostgreSQL` we click on `Next`, then on `Create`, leaving everything at default. This will create a `PostgreSQL` database.
 
 ```bash
 The following service(s) have been created in your project: boot.
@@ -181,7 +181,7 @@ command terminated with exit code 127
 
 ### Demo application
 
-Get the bits of the demo application found at `https://github.com/altfatterz/openshift-spring-boot-demo`
+We get the bits of the demo application found at `https://github.com/altfatterz/openshift-spring-boot-demo`
 
 ```bash
 $ git clone https://github.com/altfatterz/openshift-spring-boot-demo
@@ -195,7 +195,7 @@ Let's build the applications from the `openshift-spring-boot-demo` folder
 $ mvn clean install
 ```
 
-In the logs we will see that is using the [`fabric8-maven-plugin`](https://github.com/fabric8io/fabric8-maven-plugin) to generate the openshift resource descriptors (via `fabric8:resource` goal) and docker images (via `fabric8:build`) for us.
+In the logs we see that is using the [`fabric8-maven-plugin`](https://github.com/fabric8io/fabric8-maven-plugin) to generate the openshift resource descriptors (via `fabric8:resource` goal) and docker images (via `fabric8:build`) for us.
 
 ```xml
 <plugin>
@@ -284,7 +284,7 @@ HTTP/1.1 200
 
 ### ConfigMap and Secret
 
-Before deploying the `customer-service` application let's create a `ConfigMap` and `Secret` with keys that the `customer-service` is using:  
+Before deploying the `customer-service` application we create a `ConfigMap` and `Secret` with keys that the `customer-service` is using:  
 
 ```bash
 oc create configmap openshift-spring-boot-demo-config-map \ 
@@ -400,7 +400,7 @@ Events:
 ```
 
 The above worked because we provided a YAML fragment (`deployment.yml`) in the `/src/main/fabric8` folder which the `Fabric8 Maven plugin` used when creating the deployment configuration.
-The plugin is also adding `liveness` and `readiness` probes for the correct `/actuator/health` endpoint.
+The plugin adds also `liveness` and `readiness` probes for the correct `/actuator/health` endpoint.
 
 ```yml
 spec:

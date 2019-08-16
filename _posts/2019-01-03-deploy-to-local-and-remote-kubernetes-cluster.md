@@ -266,7 +266,7 @@ Next, configure docker to use the `gcloud` command-line tool as a credential hel
 $ gcloud auth configure-docker
 ```
 
-The following will be added to your `~/.dockker/config.json`
+The following will be added to your `~/.docker/config.json`
 
 ```json
 {

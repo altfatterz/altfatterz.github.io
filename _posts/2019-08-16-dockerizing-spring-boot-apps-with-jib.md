@@ -185,4 +185,4 @@ You need to specify the following, otherwise the `CREATED` field will be `49 yea
 </plugin>
 ```
 
-You can find the complete here: [http://github.com/altfatterz/docker-jib-demo.git](http://github.com/altfatterz/docker-jib-demo.git)
+You can find the used example here: [http://github.com/altfatterz/docker-jib-demo.git](http://github.com/altfatterz/docker-jib-demo.git)

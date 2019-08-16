@@ -5,7 +5,7 @@ tags: [docker, jib, springboot]
 ---
 
 [Jib](https://github.com/GoogleContainerTools/jib) is my preferred tool when it comes to dockerizing Spring Boot applications.
-It can create a docker image without Dockerfile and without a running Docker daemon by automatically uploading the image to a remote Docker Registry.
+Jib is pure Java which can create a docker image without Dockerfile and without a running Docker daemon by automatically uploading the image to a remote Docker Registry.
 It can also create a Docker image using a local Docker daemon.
 
 ### Setup

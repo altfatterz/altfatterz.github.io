@@ -11,7 +11,10 @@ avatar: https://avatars1.githubusercontent.com/u/1025546?v=3&s=460
 # Flags below are optional
 #
 
-include: [.well-known]
+include: [.well-known, _pages]
+
+paginate: 6
+paginate_path: /page:num/
 
 # Includes an icon in the footer for each username you enter
 footer-links:
@@ -50,6 +53,8 @@ sass:
 plugins:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
+  - jekyll-seo-tag
+  - jekyll-paginate
 
 # Exclude these files from your production _site
 exclude:

@@ -176,10 +176,10 @@ You need to specify the following, otherwise the `CREATED` field will be `49 yea
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>jib-maven-plugin</artifactId>
-    <version>${jib.version}</version>
+    <version>1.5.1</version>
     <configuration>
         <container>
-            <useCurrentTimestamp>true</useCurrentTimestamp>
+            <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
         </container>          
     </configuration>
 </plugin>

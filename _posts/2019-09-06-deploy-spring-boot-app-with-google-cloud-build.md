@@ -10,7 +10,7 @@ It has a simple build configuration (`cloudbuild.yaml`) with many open-source [b
 ## Cloud Build with Jib
 
 Our example is a simple spring boot application which can be found [here](https://github.com/altfatterz/cloud-build-demo).
-We are using the [Jib Maven plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin) to Dockerize this application. If you are interested in more details about this checkout my previous blog [post](https://zoltanaltfatter.com/2019/08/16/dockerizing-spring-boot-apps-with-jib/)  
+We are using the [Jib Maven plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin) to dockerize this application. If you are interested in more details about this checkout my previous blog [post](https://zoltanaltfatter.com/2019/08/16/dockerizing-spring-boot-apps-with-jib/)  
 
 Since with Jib is very easy to create a docker image our initial build step could be the following 
 
@@ -53,7 +53,7 @@ Is not fun to download the Maven dependencies for each build, so what we could d
 ```   
 
 With the `volumes` section we declare a Docker volume that is mounted into build steps to persist files between build steps. 
-The `waitFor` helps to run build steps in parallel. In this case when the `build` step is done we can start uploading the Maven dependencies to GCS while starting the deployment step in parallel.
+The `waitFor` helps to run build steps in parallel. In this case when the build step with id `build` has finished we can start in parallel uploading the Maven dependencies to GCS and starting the deployment to GKE.
 
 And of course before a new build starts again we need to unpack the dependencies from the bucket.
 
@@ -75,7 +75,7 @@ And of course before a new build starts again we need to unpack the dependencies
 
 ## Start a new build
 
-We can build trigger the build using the `gcloud` CLI: 
+We can trigger the build manually using the `gcloud` CLI: 
 
 ```bash
 $ gcloud builds submit

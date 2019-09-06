@@ -90,7 +90,7 @@ You can easily tag the docker images, for example using the maven project versio
 
 Tags make it easy to manage versions of the docker images, an example using Google Container Registry 
 
-<p><img src="/images/2019-08-16/gcr-docker-jib-demo.png" alt="gcr-docker-jib-demo" /></p>
+![gcr-docker-jijb-demo](/images/2019-08-16/gcr-docker-jib-demo.png)
 
 or with command line:
 

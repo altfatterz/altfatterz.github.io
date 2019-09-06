@@ -5,7 +5,7 @@ tags: [googlecloud, springboot]
 ---
 
 In this blog post we look into [Cloud Build](https://cloud.google.com/cloud-build/) service from Google, which is great and cheaper CI/CD tool compared to the more known [Travis CI](https://travis-ci.org/), [circleci](https://circleci.com/) or [CodeShip](https://codeship.com/) cloud services.
-It has a simple build configuration (`cloudbuild.yaml`) with many open-source [build steps](https://github.com/GoogleCloudPlatform/cloud-builders-community). 
+It has a simple build configuration (`cloudbuild.yaml`) with many open-source [build steps](https://github.com/GoogleCloudPlatform/cloud-builders-community). It comes with 120 free build-minutes per day and up to 10 concurrent builds included.
 
 ## Cloud Build with Jib
 

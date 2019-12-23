@@ -85,7 +85,7 @@ To start a simple consumer we can use the `kafka-console-consumer` command
 $ kafka-console-consumer --bootstrap-server localhost:9092 --topic demo-topic
 ```
 
-It does not print any messages yet since there are no messages in the topic yet.
+It does not print anything yet since there are no messages in the topic.
 
 #### Kafka Console Producer
 
@@ -116,7 +116,7 @@ We can specify a group when defining the consumer.
 $ kafka-console-consumer --bootstrap-server localhost:9092 --topic demo-topic --group demo-app
 ```
 
-Let's start another `kafka-console-consumer` with the above command in another terminal with the same group.  
+Let's start another `kafka-console-consumer` with the above command in another terminal with the same `demo-app` group.  
 
 We can monitor the `current offset` and `lag` of the consumers connected to the partitions.
 

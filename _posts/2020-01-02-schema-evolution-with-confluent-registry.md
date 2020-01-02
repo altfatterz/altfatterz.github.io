@@ -5,7 +5,7 @@ tags: [kafka, confluent]
 ---
 
 In this blog post we are looking into schema evolution with [Confluent Schema Registry](https://docs.confluent.io/current/schema-registry/index.html). Kakfa doesn't do any data verification it just accepts bytes as input without even loading into memory. 
-The consumers might break if the producers send wrong data, for example by renaming a field. The Schema Registry is a separate component to which both the consumers and producers talk to. It supports [Apache Avro](https://avro.apache.org/) as the data format.
+The consumers might break if the producers send wrong data, for example by renaming a field. The Schema Registry takes the responsibility to validate the data. It is a separate component to which both the consumers and producers talk to. It supports [Apache Avro](https://avro.apache.org/) as the data format.
  
 #### Start Kafka
 

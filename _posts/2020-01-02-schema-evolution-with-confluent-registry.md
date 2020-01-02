@@ -4,11 +4,12 @@ title: Schema Evolution with Confluent Schema Registry
 tags: [kafka, confluent]
 ---
 
-In this post we are looking into schema evolution with [Confluent Schema Registry](https://docs.confluent.io/current/schema-registry/index.html).
+In this blog post we are looking into schema evolution with [Confluent Schema Registry](https://docs.confluent.io/current/schema-registry/index.html). Kakfa doesn't do any data verification it just accepts bytes as input without even loading into memory. 
+The consumers might break if the producers send wrong data, for example by renaming a field. The Schema Registry is a separate component to which both the consumers and producers talk to. It supports [Apache Avro](https://avro.apache.org/) as the data format.
  
 #### Start Kafka
 
-We are starting Kafka with `docker-compose` using the [landoop/fast-data-dev](https://hub.docker.com/r/landoop/kafka-lenses-dev) image. This will also startup other services like [Confluent Schema registry](https://www.confluent.io/confluent-schema-registry/) which we will need later on.
+We are starting Kafka with `docker-compose` using the [landoop/fast-data-dev](https://hub.docker.com/r/landoop/kafka-lenses-dev) image. This will also startup other services like `Confluent Schema Registry` which we will need later on.
 
 ```yaml
 version: '3'
@@ -43,7 +44,9 @@ Open the Landoop UI in a browser `http://localhost:3030`
  
 #### Avro
 
-Primitive data types in avro:
+Avro is a language independent, schema-based data serialization library. The schema is specified in a JSON format.  
+
+It has the following primitive data types:
 
 * `null`    - No value.
 * `boolean` - A binary value.
@@ -57,14 +60,65 @@ Primitive data types in avro:
 Complex types:
 
 * `record`
-* `enum`
-* `array`
-* `map`
-* `union` - they are represented as JSON array, and indicate that a field may have more than one type
 
-More information you can find here: [https://docs.oracle.com/cd/E57769_01/html/GettingStartedGuide/avroschemas.html](https://docs.oracle.com/cd/E57769_01/html/GettingStartedGuide/avroschemas.html)
+```json
+{
+  "namespace": "com.github.altfatterz.avro",
+  "name": "Customer",
+  "type": "record",
+  "fields": [
+    {
+      "name": "first_name",
+      "type": "string",
+      "doc": "the first name of the customer"
+    },
+    {
+      "name": "last_name",
+      "type": "string",
+      "doc": "the last name of the customer"
+    }
+  ]
+}
+```
+ 
+* `enum`   
+
+```json
+{ 
+  "type" : "enum",
+  "name" : "Colors",
+  "symbols" : ["WHITE", "BLUE", "GREEN", "RED", "BLACK"]
+}
+```
+
+* `array` 
+
+```json
+{"type" : "array", "items" : "string"}
+```
+
+* `map`    
+
+```json
+{"type" : "map", "values" : "int"}
+```
+
+* `union`  - they are represented as JSON array, and indicate that a field may have more than one type
+
+```json
+{
+  "name": "phone_number",
+  "type": ["null","string"],
+  "default": null,
+  "doc": "the phone number of the customer"
+}
+```
+
+More information about `Avro` you can find [here](https://avro.apache.org/docs/current/)
 
 #### Avro Tools
+
+`Avro Tools` is a command line utility to work with avro data.
 
 Install 
 
@@ -72,7 +126,7 @@ Install
 $ brew install avro-tools
 ```
 
-Convert from JSON to AVRO
+Convert from `json` to `avro`:
 
 ```bash
 $ avro-tools fromjson --schema-file src/main/resources/avro/schema.avsc customer.json > customer.avro
@@ -80,7 +134,7 @@ $ avro-tools fromjson --schema-file src/main/resources/avro/schema.avsc customer
 
 A `customer.avro` should be created. 
 
-Get the schema from `customer.avro` file
+Get the schema from `customer.avro` file:
 
 ```bash
 $ avro-tools getschema customer.avro
@@ -88,7 +142,7 @@ $ avro-tools getschema customer.avro
 
 The schema will be printed to the standard output.
 
-Convert from AVRO to JSON
+Convert from `avro` to `json`:
 
 ```bash
 $ avro-tools tojson --pretty customer.avro
@@ -96,11 +150,11 @@ $ avro-tools tojson --pretty customer.avro
 
 #### Confluent Schema Registry
 
-Avro schemas are stored in the [Confluent Schema Registry](https://www.confluent.io/confluent-schema-registry/). A producer sends Avro content to Kafka and the schema to Schema Registry, similarly a Consumer will ge the schema from Schema Registry will read the Avro content from Kafka.
+Avro schemas are stored in the `Confluent Schema Registry`. A `producer` sends `avro` content to `Kafka` and the schema to `Schema Registry`, similarly a `consumer` will get the schema from `Schema Registry` and will read the `avro` content from `Kafka`.
 
 #### Kafka Avro Console Producer and Consumer
 
-These tools come with the Confluent Schema Registry and allow to send avro data to Kafka. The fastest way to get the binaries is using `docker run` 
+These tools come with the `Confluent Schema Registry` and allow to send `avro` data to `Kafka`. The fastest way to get the binaries is using `docker run` 
 
 ```bash
 $ docker run --net=host -it confluentinc/cp-schema-registry:5.3.2 /bin/bash
@@ -129,11 +183,11 @@ And now we can send data:
 {"first_name":"Kasia"}
 ```
 
-Now if we check the `kafka-avro-console-consumer` should have received the data. In the [kafka-topics-ui](http://localhost:3030/kafka-topics-ui/#/) we can see that the `mytopic` topic was created and the data is inside the topic in `avro` data type.   
+Now if we check the `kafka-avro-console-consumer` it should have received the data. In the [kafka-topics-ui](http://localhost:3030/kafka-topics-ui/#/) we can see that the `mytopic` topic was created and the data inside the topic has `avro` data type.   
 
 ![kafka-avro-console-producer](/images/2020-01-02/kafka-avro-console-producer.png)
 
-If we send the wrong field name or wrong data type for the field value we get an error
+If we send the wrong field name or wrong data type as the field value we get an error:
 
 ```bash
 {"name":"Zoltan"}
@@ -144,8 +198,29 @@ Caused by: org.apache.avro.AvroTypeException: Expected field name not found: fir
 
 #### Kafka Avro Producer and Consumer with Java
 
+Compared to the simple `KafkaProducer` and `KafkaConsumer` discussed in a previous blog post [https://zoltanaltfatter.com/2019/11/23/kafka-basics/](https://zoltanaltfatter.com/2019/11/23/kafka-basics/) we need to configure a few things:
 
+##### KafkaConsumer
 
+```bash
+properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class.getName());
+properties.setProperty("specific.avro.reader", "true");
+properties.setProperty("schema.registry.url", "http://localhost:8081");
+
+```
+
+##### KafkaProducer
+
+```java
+properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+properties.setProperty("schema.registry.url", "http://localhost:8081");
+```
+
+The complete source code can be found [here](https://github.com/altfatterz/learning-kafka/tree/master/avro-examples/src/main/java/com/github/altfatterz).
+
+With the `Kafka Topics UI` we can inspect the produced message: 
+
+![customer-topic](/images/2020-01-02/customer-topic.png)
 
 #### Schema evolution 
 
@@ -174,12 +249,18 @@ $ kafka-avro-console-producer --broker-list localhost:9092 --topic mytopic \
 {"first_name":"John", "last_name":"Doe"} 
 ```
 
-We should not get error this time and we see another version of the schema registered:
+We should not get error this time and we should see another version of the schema registered:
 
 ![schema-evolution](/images/2020-01-02/schema-evolution.png)
 
 #### Conclusion
 
-References
-* Avro docs: https://avro.apache.org/docs/current/spec.html
-* Schema Registry: https://docs.confluent.io/current/schema-registry/index.html
+In this blog post we looked into
+
+1. Apache Avro
+2. Confluent Container Registry
+3. Kafka Avro Console Producer and Consumer
+4. Kafka Avro Producer and Consumer with Java
+5. Schema Evolution
+
+The source code of the examples can be found here: [https://github.com/altfatterz/learning-kafka/tree/master/avro-examples](https://github.com/altfatterz/learning-kafka/tree/master/avro-examples)

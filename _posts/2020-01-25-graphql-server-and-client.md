@@ -8,7 +8,7 @@ tags: [graphql, springboot]
 It is strongly typed, the schema defines the GraphQL API's type system. It defines the possible objects that a client can access. A client can find information
 about the schema via introspection. 
 
-In this blog post we are going to develop a simple GraphQL server and client in Java. First we define the GraphQL schema
+In this blog post we are going to develop a simple GraphQL server and client in Kotlin/Java. First we define the GraphQL schema
 with the following root types. 
 
 ```graphql
@@ -365,5 +365,5 @@ as a desktop app. It has query history, configuration of HTTP headers and tabs.
 
 ## Conclusion
 
-In this blog post we saw how easy to create a simple GraphQL server anc client. 
+In this blog post we saw how easy to create a simple GraphQL server and client. 
 The code examples can be found in this repository [https://github.com/altfatterz/graphql-demos](https://github.com/altfatterz/graphql-demos)

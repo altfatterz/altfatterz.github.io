@@ -4,7 +4,7 @@ title: Semantic versioning with jgitver
 tags: [jgitver, semanticversioning, github]
 ---
 
-[`jgitver`](https://jgitver.github.io/) is a very useful tool to automatically compute the version of your project leveraging the git history.
+[jgitver](https://jgitver.github.io/) is a very useful tool to automatically compute the version of your project leveraging the git history.
 It does not pollute the project's git history like the [maven release plugin](http://maven.apache.org/maven-release/maven-release-plugin/) 
  
 `jgitver` has support for both Maven and Gradle. In this blog post we are going to use Gradle. 
@@ -110,7 +110,7 @@ In the above example git information is also exposed using the [gradle-git-prope
 ### Docker
 
 Since nowadays the build artifact is a docker image we want to make sure the image is tagged with calculated project version.
-Here we are using [Jib](https://github.com/GoogleContainerTools/jib) to dockerize our Spring Boot application. If you are new to Jib have a look to my previous blog post [https://zoltanaltfatter.com/2019/08/16/dockerizing-spring-boot-apps-with-jib/](https://zoltanaltfatter.com/2019/08/16/dockerizing-spring-boot-apps-with-jib/))
+Here we are using [Jib](https://github.com/GoogleContainerTools/jib) to dockerize our Spring Boot application. If you are new to Jib have a look to my previous blog post [https://zoltanaltfatter.com/2019/08/16/dockerizing-spring-boot-apps-with-jib/](https://zoltanaltfatter.com/2019/08/16/dockerizing-spring-boot-apps-with-jib/)
 
 To build to a Docker daemon, we can use 
 
@@ -165,6 +165,7 @@ The checkout action only fetches a single commit, but in order to `jgitver` to c
 
 Then after restoring the Gradle build cache we build the project.
 
+{% raw %}
 ```yaml
       - name: Setup build cache
         uses: actions/cache@v1
@@ -177,9 +178,11 @@ Then after restoring the Gradle build cache we build the project.
       - name: Build with Gradle
         run: ./gradlew build
 ```
+{% endraw %}
 
 In the next step we build the docker image and push it to `GitHub Packages` registry.
 
+{% raw %}
 ```yaml
       - name: Compute version
         id: compute_version
@@ -193,6 +196,7 @@ In the next step we build the docker image and push it to `GitHub Packages` regi
             -Djib.to.auth.username=altfatterz \
             -Djib.to.auth.password=${{ secrets.GITHUB_TOKEN }}
 ``` 
+{% endraw %}
 
 As you can see our pipeline is pretty fast, it took only 41 seconds.
 
@@ -207,4 +211,4 @@ You cannot remove packages from GitHub Package Registry.
 
 ![github-packages-details](/images/2020-04-10/github-packages-details.png)
 
-The example source code you can nfind here [https://github.com/altfatterz/jgitver-demo](https://github.com/altfatterz/jgitver-demo)   
+The example source code can be found here [https://github.com/altfatterz/jgitver-demo](https://github.com/altfatterz/jgitver-demo)   

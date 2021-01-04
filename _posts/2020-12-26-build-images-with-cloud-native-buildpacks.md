@@ -242,3 +242,20 @@ $ docker run --rm -p 8080:8080 buildpacks-demo:0.0.1-SNAPSHOT
 $ http :8080
 Hello, Buildpacker!
 ```
+
+With `pack` is possible to `rebase` the image to a version pinned run image. This is useful for example when there is a security issue with the run image and with this command we can change only that OS layer in the image.
+
+```bash
+$ pack rebase buildpacks-demo:latest --run-image paketobuildpacks/run:1.0.11-base-cnb
+
+1.0.11-base-cnb: Pulling from paketobuildpacks/run
+Digest: sha256:f393fa2927a2619a10fc09bb109f822d20df909c10fed4ce3c36fad313ea18e3
+Status: Image is up to date for paketobuildpacks/run:1.0.11-base-cnb
+Rebasing buildpacks-demo:latest on run image paketobuildpacks/run:1.0.11-base-cnb
+*** Images (7c8abb9b40d2):
+      buildpacks-demo:latest
+Rebased Image: 7c8abb9b40d2f50b556efa003642ca5d00a24ec76fb91efc82c52d37887401a5
+Successfully rebased image buildpacks-demo:latest
+```
+
+There is another tool `kpack` which running as a service on Kubernetes could do this `rebase` on all of your affected images, but that is a topic for another blog post :)

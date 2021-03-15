@@ -1,27 +1,32 @@
 ---
 layout: post
 title: Hello World with Knative Serving
-tags: [knative, kubernetes]
+tags: [knative, kubernetes, kubernerds ]
 ---
 
-Knative brings serverless deployment models to Kubernetes.
+[Knative](https://knative.dev/) goal is to make developers more productive by providing higher level abstractions ([CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)) on top of Kubernetes.
+It solves common problems like stand up a scalable, secure, stateless service in seconds, connecting disparate systems together.
+`Knative` also brings serverless deployment models to Kubernetes.
 
-In early blog posts about Knative it was mentioned `Build` as a third subproject. `Build` became and independent project which is known under the name [Tekton](https://tekton.dev/).
+There are two major subprojects of Knative: `Serving` and `Eventing`. `Serving` is responsible
+for deploying containers on Kubernetes, taking care of the details of networking, autoscaling (even to zero), upgrading, routing.
+Eventing is responsible for connecting disparate systems. In early blog posts about Knative it was mentioned `Build` as a third subproject. `Build` became and independent project which is known under the name [Tekton](https://tekton.dev/).
 
-We will discuss the three main Knative concepts which are: `Service`, `Revision`, `Route`
-
-With a `route` we can map an incoming HTTP request to a `revision`
+In this blog post we will look into `Knative Serving`. The three main components of `Knative Serving` are good represented on this diagram:
 
 <p><img src="/images/2021-03-14/Knative.png" alt="Knative" /></p>
 
+I like also the Knative definition from [Piotr Mińkowski](https://twitter.com/piotr_minkowski) :
+
+<p><img src="/images/2021-03-14/Knative-CloudFoundry.png" alt="CloudRun" /></p>
+
 ### Local setup
 
-In this example we use the Kubernetes cluster provided with [Docker Desktop](https://www.docker.com/products/docker-desktop)
+In this example we use the single-node Kubernetes cluster provided with [Docker Desktop](https://www.docker.com/products/docker-desktop).
+We also configured `Docker Desktop` with at least 4 CPUs and 8 GB memory to make sure everything is running smoothly.
 
-In Resources make sure you configure at least 4 CPUs and 8 GB memory.
-
-We need `kubectl` which can be easily installed following [https://kubernetes.io/docs/tasks/tools/](https://kubernetes.io/docs/tasks/tools/)
-We need also the `kn` the Knative CLI, which can be easily installed following [https://knative.dev/v0.19-docs/install/install-kn/](https://knative.dev/v0.19-docs/install/install-kn/) 
+We need `kubectl` which can be easily installed following [https://kubernetes.io/docs/tasks/tools/](https://kubernetes.io/docs/tasks/tools/) 
+and we need also the `kn`, the Knative CLI, which can be easily installed following [https://knative.dev/docs/install/install-kn/](https://knative.dev/v0.19-docs/install/install-kn/) 
 
 Next we can start with Knative installation following [https://knative.dev/docs/install/any-kubernetes-cluster/](https://knative.dev/docs/install/any-kubernetes-cluster/)
 
@@ -55,7 +60,7 @@ Address: 10.1.2.3
 ```
 We can use this to send traffic to endpoints for which we haven’t configured a domain name.
 
-After successful installation we have have something like this:
+After successful installation we have something like this:
 
 ```bash
 $ kubectl get pods --all-namespaces
@@ -82,14 +87,26 @@ kube-system       storage-provisioner                      1/1     Running     5
 kube-system       vpnkit-controller                        1/1     Running     3          4d16h
 ```
 
-### Build image
+### Example application
 
-Build image:
+We use a [simple](https://github.com/altfatterz/cloud-run-demos/tree/master/hello-world-knative) Spring Boot application using the [recently released](https://spring.io/blog/2021/03/11/announcing-spring-native-beta) `Spring Native Beta`.
+After building the image (note it will take longer, around 5 minutes)
+
 ```bash
 $ mvn spring-boot:build-image
 ```
 
-First we need to push our image into a Docker Registry. We use [Dockerhub](https://hub.docker.com/) in this example.
+we can start our application using
+
+```bash
+$ docker run --rm -p 8080:8080 altfatterz/hello-world-knative:0.0.1-SNAPSHOT
+... 
+2021-03-15 20:05:47.331  INFO 1 --- [           main] c.example.HelloWorldKnativeApplication   : Started HelloWorldKnativeApplication in 0.054 seconds (JVM running for 0.057)
+```
+
+Note, the application starts up super fast only 0.054 seconds.
+
+Next, we need to push our image into a Docker Registry. We use [Dockerhub](https://hub.docker.com/) in this example.
 
 ```bash
 $ docker login
@@ -98,7 +115,7 @@ $ docker push altfatterz/hello-world-knative:0.0.1-SNAPSHOT
 
 ### Knative Serving
 
-Create service:
+We create a Knative Service using:
 
 ```bash
 $ kn service create hello-world-knative --image=docker.io/altfatterz/hello-world-knative:0.0.1-SNAPSHOT --env TARGET="Knative"
@@ -119,7 +136,7 @@ Service 'hello-world-knative' created to latest revision 'hello-world-knative-00
 http://hello-world-knative.default.127.0.0.1.xip.io
 ```
 
-`kn` creates a `Service`, which causes the creation of a `Route` and a `Revision` and a `Configuration`
+`kn` creates a `Knative Service`, which causes the creation of a `Route`, a `Revision` and a `Configuration`
 
 ```bash
 $ kn service list
@@ -321,4 +338,4 @@ For more information look into the official documentation of [Cloud Run](https:/
 
 ### Conclusion
 
-We have seen how to set up a basic local `Knative Serving` environment, deploy a simple Spring Boot application on it. We have looked into the core concepts of `Knative Serving` and also we have seen how we can deploy our application to a fully managed `Knative Serving` offering like `Cloud Run` from Google   
+We have seen how to set up a basic local `Knative Serving` environment, deploy a [simple](https://github.com/altfatterz/cloud-run-demos/tree/master/hello-world-knative) Spring Boot application on it. We have looked into the core concepts of `Knative Serving` and also we have seen how we can deploy our application to a fully managed `Knative Serving` offering like `Cloud Run` from Google   

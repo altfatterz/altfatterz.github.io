@@ -16,7 +16,6 @@ In this blog post we will look into `Knative Serving`. The three main components
 (taken from [Jacques Chester](https://twitter.com/jacques_chester)'s excellent book [Knative in Action](https://livebook.manning.com/book/knative-in-action/chapter-1/v-6/184)):
 
 <p><img src="/images/2021-03-14/Knative.png" alt="Knative" /></p>
-(from [Jacques Chester](https://twitter.com/jacques_chester)'s excellent book [Knative in Action](https://livebook.manning.com/book/knative-in-action/chapter-1/v-6/184))  
 
 I like also the Knative definition from [Piotr Mińkowski](https://twitter.com/piotr_minkowski) :
 

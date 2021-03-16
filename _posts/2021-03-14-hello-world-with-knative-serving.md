@@ -13,7 +13,7 @@ for deploying containers on Kubernetes, taking care of the details of networking
 Eventing is responsible for connecting disparate systems. In early blog posts about Knative it was mentioned `Build` as a third subproject. `Build` became and independent project which is known under the name [Tekton](https://tekton.dev/).
 
 In this blog post we will look into `Knative Serving`. The three main components of `Knative Serving` are good represented on this diagram
-(take from [Jacques Chester](https://twitter.com/jacques_chester)'s excellent book [Knative in Action](https://livebook.manning.com/book/knative-in-action/chapter-1/v-6/184)):
+(taken from [Jacques Chester](https://twitter.com/jacques_chester)'s excellent book [Knative in Action](https://livebook.manning.com/book/knative-in-action/chapter-1/v-6/184)):
 
 <p><img src="/images/2021-03-14/Knative.png" alt="Knative" /></p>
 (from [Jacques Chester](https://twitter.com/jacques_chester)'s excellent book [Knative in Action](https://livebook.manning.com/book/knative-in-action/chapter-1/v-6/184))  

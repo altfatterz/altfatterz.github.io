@@ -9,14 +9,15 @@ The consumers might break if the producers send wrong data, for example by renam
  
 #### Start Kafka
 
-We are starting Kafka with `docker-compose` using the [landoop/fast-data-dev](https://hub.docker.com/r/landoop/kafka-lenses-dev) image. This will also startup other services like `Confluent Schema Registry` which we will need later on.
+We are starting Kafka with `docker-compose` using the [lensesio/fast-data-dev](https://hub.docker.com/r/lensesio/fast-data-dev) image. This will also startup other services like `Confluent Schema Registry` which we will need later on.
 
 ```yaml
 version: '3'
 
 services:
   kafka-cluster:
-    image: landoop/fast-data-dev:2.2
+    image: lensesio/fast-data-dev
+    container_name: fast-data-dev
     environment:
       ADV_HOST: 127.0.0.1         # Change to 192.168.99.100 if using Docker Toolbox
       RUNTESTS: 0                 # Disable Running tests so the cluster starts faster
@@ -24,7 +25,7 @@ services:
       SAMPLEDATA: 0               # Do not create sea_vessel_position_reports, nyc_yellow_taxi_trip_data, reddit_posts topics with sample Avro records.
     ports:
       - 2181:2181                 # Zookeeper
-      - 3030:3030                 # Landoop UI
+      - 3030:3030                 # Lensesio UI
       - 8081-8083:8081-8083       # REST Proxy, Schema Registry, Kafka Connect ports
       - 9581-9585:9581-9585       # JMX Ports
       - 9092:9092                 # Kafka Broker
@@ -35,10 +36,10 @@ Before you start up the services make sure you increase the RAM for at least 4GB
 To start up the services use this command:
 
 ```bash
-$ docker-compose -f docker-compose/landoop-kafka-cluster.yml up
+$ docker-compose up -d
 ```
 
-Open the Landoop UI in a browser `http://localhost:3030`
+Open the Lensesio UI in a browser `http://localhost:3030`
 
 ![lenses-ui](/images/2020-01-02/lenses-ui.png)
  
@@ -263,4 +264,4 @@ In this blog post we looked into
 4. Kafka Avro Producer and Consumer with Java
 5. Schema Evolution
 
-The source code of the examples can be found here: [https://github.com/altfatterz/learning-kafka/tree/master/avro-examples](https://github.com/altfatterz/learning-kafka/tree/master/avro-examples)
+The source code of the examples can be found here: [https://github.com/altfatterz/learning-kafka/tree/master/schema-registry/avro-examples](https://github.com/altfatterz/learning-kafka/tree/master/schema-registry/avro-examples)

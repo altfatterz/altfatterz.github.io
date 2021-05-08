@@ -105,7 +105,7 @@ The [documentation](https://docs.openshift.com/container-platform/4.6/cli_refere
 $ brew install openshift-cli
 ```
 
-Another way to install the `oc` command line with crc
+Another way to setup the `oc` command line tool is with `crc`
 
 ```bash
 eval $(crc oc-env)
@@ -118,7 +118,13 @@ However, if you cleared your screen you can access them again using:
 $ crc console --credentials
 ``` 
 
-After logging in with kubedmin let's check out our cluster.
+To check the cluster status we can use:
+
+```bash
+$ crc status
+```
+
+Another way is with is the `oc` comand line tool:
 
 ```bash
 $ oc status
@@ -172,9 +178,7 @@ When we are ready with the demo we can stop and delete our cluster using:
 $ crc stop
 $ crc delete
 ```
- 
- 
- 
+
 Resources:
  
 1. Getting Started Guide with RedHat CodeReady Containers 
